@@ -1,19 +1,6 @@
 <?php
 /**
- * Database connection factory for MedCare Portal
- * Usage: $pdo = getPDO();
- *
- * Reads connection settings from environment variables:
- * - DB_HOST (default: localhost)
- * - DB_PORT (default: 3306)
- * - DB_NAME (default: medcare_portal)
- * - DB_USER (default: root)
- * - DB_PASS (default: empty)
- * - DB_CHARSET (default: utf8mb4)
- *
- * The function returns a PDO instance (singleton) configured with
- * safe defaults: exceptions for errors, associative fetch mode and
- * real prepared statements.
+ * Database connection factory, configure credentials in .env
  */
 
 if (!function_exists('getEnvVar')) {
@@ -58,7 +45,6 @@ if (!function_exists('getPDO')) {
             $pdo = new PDO($dsn, $user, $pass, $options);
             return $pdo;
         } catch (PDOException $e) {
-            // Log the real error to the server logs and rethrow a generic exception
             error_log('Database connection error: ' . $e->getMessage());
             throw $e;
         }
@@ -67,8 +53,7 @@ if (!function_exists('getPDO')) {
 
 if (!function_exists('db_query')) {
     /**
-     * Convenience helper to execute a prepared statement and return rows.
-     * Returns false on failure.
+     * execute a prepared statement and return rows or false on failure
      */
     function db_query(string $sql, array $params = [])
     {
@@ -80,5 +65,3 @@ if (!function_exists('db_query')) {
         return false;
     }
 }
-
-// EOF (no closing PHP tag on purpose)
