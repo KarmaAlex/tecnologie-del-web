@@ -1,0 +1,26 @@
+<section class="auth-page">
+    <div class="container auth-grid">
+        <article class="auth-panel">
+            <p class="eyebrow">Authentication</p>
+            <h1><[FORM_TITLE]></h1>
+            <p class="lead"><[FORM_LEAD]></p>
+            <p class="auth-help"><[HELP_TEXT]></p>
+            <a class="btn btn-text" href="<[HOME_URL]>"><[HOME_TEXT]></a>
+        </article>
+
+        <article class="auth-card" aria-label="Login form">
+            <p class="<[ALERT_CLASS]>"><[ALERT_MESSAGE]></p>
+            <form method="post" action="login.php" novalidate>
+                <div class="field-group">
+                    <label for="identity"><[IDENTITY_LABEL]></label>
+                    <input id="identity" name="identity" type="text" required autocomplete="username" value="<[IDENTITY_VALUE]>" maxlength="255">
+                </div>
+                <div class="field-group">
+                    <label for="password"><[PASSWORD_LABEL]></label>
+                    <input id="password" name="password" type="password" required autocomplete="current-password" maxlength="255">
+                </div>
+                <button type="submit" class="btn btn-primary auth-submit"><[SUBMIT_TEXT]></button>
+            </form>
+        </article>
+    </div>
+</section>
