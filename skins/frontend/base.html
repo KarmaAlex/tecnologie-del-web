@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title><[PAGE_TITLE]></title>
+	<meta name="description" content="<[META_DESCRIPTION]>">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Literata:opsz,wght@7..72,500;7..72,600&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="assets/css/frontend.css">
+</head>
+<body>
+	<header class="site-header">
+		<div class="container nav-wrap">
+			<div class="brand-block">
+				<span class="brand-mark" aria-hidden="true"></span>
+				<a class="brand-name" href="index.php"><[BRAND_NAME]></a>
+			</div>
+			<div class="nav-right">
+				<p class="nav-welcome"><[NAV_WELCOME]></p>
+				<a class="btn btn-primary" href="<[NAV_ACTION_URL]>"><[NAV_ACTION_TEXT]></a>
+				<[if!empty NAV_SECONDARY_ACTION_TEXT]>
+					<a class="btn btn-outline" href="<[NAV_SECONDARY_ACTION_URL]>"><[NAV_SECONDARY_ACTION_TEXT]></a>
+				<[/if!empty]>
+				<button type="button" class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="quickMenu">Menu</button>
+			</div>
+		</div>
+		<div class="quick-menu" id="quickMenu" hidden>
+			<a href="index.php">Home</a>
+			<a href="login.php">Login</a>
+			<a href="logout.php">Logout</a>
+		</div>
+	</header>
+
+	<main>
+		<[PAGE_CONTENT]>
+	</main>
+
+	<footer class="site-footer">
+		<div class="container footer-grid">
+			<p class="footer-brand"><[BRAND_NAME]></p>
+			<p class="footer-copy">Healthcare information platform with a professional and secure orientation.</p>
+			<p class="footer-year">&copy; <[CURRENT_YEAR]> MedCare Portal</p>
+		</div>
+	</footer>
+
+	<script src="assets/js/main.js" defer></script>
+</body>
+</html>
