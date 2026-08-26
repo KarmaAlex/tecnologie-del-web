@@ -3,6 +3,55 @@
  * Database connection factory, configure credentials in .env
  */
 
+if (!function_exists('loadDotEnvFile')) {
+    function loadDotEnvFile(string $filePath): void
+    {
+        if (!is_readable($filePath)) {
+            return;
+        }
+
+        $lines = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        if (!is_array($lines)) {
+            return;
+        }
+
+        foreach ($lines as $line) {
+            $line = trim($line);
+            if ($line === '' || str_starts_with($line, '#')) {
+                continue;
+            }
+
+            if (str_starts_with($line, 'export ')) {
+                $line = trim(substr($line, 7));
+            }
+
+            $parts = explode('=', $line, 2);
+            if (count($parts) !== 2) {
+                continue;
+            }
+
+            $name = trim($parts[0]);
+            $value = trim($parts[1]);
+
+            if ($name === '') {
+                continue;
+            }
+
+            if ((str_starts_with($value, '"') && str_ends_with($value, '"')) ||
+                (str_starts_with($value, "'") && str_ends_with($value, "'"))) {
+                $value = substr($value, 1, -1);
+            }
+
+            if (getenv($name) === false && !array_key_exists($name, $_ENV)) {
+                putenv($name . '=' . $value);
+                $_ENV[$name] = $value;
+            }
+        }
+    }
+}
+
+loadDotEnvFile(__DIR__ . '/.env');
+
 if (!function_exists('getEnvVar')) {
     function getEnvVar(string $name, $default = null)
     {
@@ -24,6 +73,10 @@ if (!function_exists('getPDO')) {
         static $pdo = null;
         if ($pdo instanceof PDO) {
             return $pdo;
+        }
+
+        if (!extension_loaded('pdo_mysql')) {
+            throw new RuntimeException('Missing required PHP extension: pdo_mysql.');
         }
 
         $host = (string) getEnvVar('DB_HOST', '127.0.0.1');

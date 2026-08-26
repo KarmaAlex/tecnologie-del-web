@@ -1,4 +1,13 @@
+-- Application DB user for MedCare Portal.
+-- Update the password before using in production environments.
+CREATE USER IF NOT EXISTS 'medcare_user'@'localhost' IDENTIFIED BY 'ChangeMeStrong123!';
+CREATE USER IF NOT EXISTS 'medcare_user'@'127.0.0.1' IDENTIFIED BY 'ChangeMeStrong123!';
+
 CREATE DATABASE IF NOT EXISTS `medcare_portal`;
+GRANT ALL PRIVILEGES ON `medcare_portal`.* TO 'medcare_user'@'localhost';
+GRANT ALL PRIVILEGES ON `medcare_portal`.* TO 'medcare_user'@'127.0.0.1';
+FLUSH PRIVILEGES;
+
 USE `medcare_portal`;
 
 CREATE TABLE `users` (
