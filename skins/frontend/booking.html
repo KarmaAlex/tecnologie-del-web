@@ -1,0 +1,105 @@
+<style>
+	.patient-page-head { padding: 2.6rem 0 1.2rem; }
+	.patient-page-head h1 { margin-bottom: 0.4rem; }
+	.patient-dashboard-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 1.2rem; padding-bottom: 3rem; align-items: start; }
+	.patient-panel { background: var(--surface); border: 1px solid #dbe7e3; border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.5rem; }
+	.patient-panel h2 { font-size: 1.2rem; margin-bottom: 0.9rem; }
+	.patient-form-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+	.patient-field-group label { display: block; margin-bottom: 0.35rem; color: var(--ink-strong); font-weight: 600; }
+	.patient-field-group select,
+	.patient-field-group textarea { width: 100%; border-radius: 10px; border: 1px solid #b8cec7; padding: 0.55rem 0.7rem; font: inherit; color: var(--ink-strong); background: #ffffff; min-height: 44px; }
+	.patient-field-group textarea { min-height: 90px; resize: vertical; }
+	.patient-field-hint { font-size: 0.85rem; margin-top: 0.3rem; margin-bottom: 0; color: var(--ink-muted); }
+	.patient-table-wrap { overflow-x: auto; }
+	.patient-data-table { width: 100%; border-collapse: collapse; font-size: 0.94rem; }
+	.patient-data-table th,
+	.patient-data-table td { text-align: left; padding: 0.65rem 0.6rem; border-bottom: 1px solid #e3ece9; vertical-align: top; }
+	.patient-data-table th { color: var(--ink-muted); font-weight: 600; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.03em; }
+	.patient-badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.78rem; font-weight: 600; white-space: nowrap; }
+	.patient-badge-status-booked { background: #fdf1dd; color: #92600c; }
+	.patient-badge-status-confirmed { background: #e1f0fb; color: #12557f; }
+	.patient-badge-status-completed { background: #e7f5ea; color: #1e5c33; }
+	.patient-badge-status-cancelled { background: #fbe7e6; color: #8a2f28; }
+	.patient-btn-small { min-height: 34px; padding: 0.3rem 0.8rem; font-size: 0.85rem; }
+	.patient-btn-danger-outline { border-color: #e0b3af; color: #8a2f28; background: #ffffff; }
+	.patient-empty-note { color: var(--ink-muted); font-style: italic; margin-bottom: 0; }
+	@media (max-width: 900px) { .patient-dashboard-grid { grid-template-columns: 1fr; } }
+</style>
+
+<section class="patient-page-head">
+	<div class="container">
+		<p class="eyebrow">Area Paziente</p>
+		<h1><[PAGE_HEADING]></h1>
+		<p class="lead"><[PAGE_LEAD]></p>
+	</div>
+</section>
+
+<section class="patient-dashboard-grid container">
+	<article class="patient-panel">
+		<h2>Prenota una visita</h2>
+
+		<[if!empty FORM_MESSAGE]>
+			<p class="<[FORM_MESSAGE_CLASS]>"><[FORM_MESSAGE]></p>
+		<[/if!empty]>
+
+		<[ifempty CAN_BOOK]>
+			<form class="patient-form-grid" method="post" action="book_appointment.php">
+				<input type="hidden" name="csrf_token" value="<[CSRF_TOKEN]>">
+				<input type="hidden" name="action" value="book">
+
+				<div class="patient-field-group">
+					<label for="schedule_id">Disponibilità</label>
+					<select id="schedule_id" name="schedule_id" required>
+						<option value="">Seleziona un orario disponibile</option>
+						<[foreach]>
+							<option value="<[SLOT_ID]>" <[SLOT_SELECTED]>><[SLOT_LABEL]></option>
+						<[/foreach]>
+					</select>
+					<p class="patient-field-hint">Medico, reparto e fascia oraria disponibile.</p>
+				</div>
+
+				<div class="patient-field-group">
+					<label for="reason">Motivo della visita</label>
+					<textarea id="reason" name="reason" required maxlength="500" placeholder="Es. controllo periodico, sintomi da riferire..."><[REASON_VALUE]></textarea>
+				</div>
+
+				<button type="submit" class="btn btn-primary">Conferma prenotazione</button>
+			</form>
+		<[/ifempty]>
+	</article>
+
+	<article class="patient-panel">
+		<h2>Le tue prenotazioni</h2>
+
+		<[ifempty HAS_APPOINTMENTS]>
+			<p class="patient-empty-note">Non hai ancora nessuna prenotazione.</p>
+		<[/ifempty]>
+
+		<[if!empty HAS_APPOINTMENTS]>
+			<div class="patient-table-wrap">
+				<table class="patient-data-table">
+					<thead>
+						<tr>
+							<th>Data e ora</th>
+							<th>Medico</th>
+							<th>Reparto</th>
+							<th>Stato</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<[foreach]>
+							<tr>
+								<td><[APPT_DATE]></td>
+								<td><[APPT_DOCTOR]></td>
+								<td><[APPT_DEPARTMENT]></td>
+								<td><span class="<[APPT_STATUS_CLASS]>"><[APPT_STATUS_LABEL]></span></td>
+								<td><[APPT_CANCEL_HTML]></td>
+							</tr>
+						<[/foreach]>
+					</tbody>
+				</table>
+			</div>
+		<[/if!empty]>
+	</article>
+</section>
