@@ -156,6 +156,7 @@ $availableSchedules = fetchAvailableSchedules($pdo);
 $appointments = $patientProfileId !== null ? fetchPatientAppointments($pdo, $patientProfileId) : [];
 
 $booking = new Template(__DIR__ . '/../../../skins/frontend/booking');
+$booking->setContent('PAGE_STYLES', (string)file_get_contents(__DIR__ . '/../../../skins/frontend/booking.css'));
 $booking->setContent('PAGE_HEADING', 'Prenota una visita');
 $booking->setContent('PAGE_LEAD', 'Scegli una disponibilità tra quelle offerte dai nostri medici e gestisci le tue prenotazioni.');
 $booking->setContent('FORM_MESSAGE', $formMessage);

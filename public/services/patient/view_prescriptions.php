@@ -57,6 +57,7 @@ function fetchPrescriptionItems(PDO $pdo, int $prescriptionId): array
 $prescriptions = $patientProfileId !== null ? fetchPrescriptions($pdo, $patientProfileId) : [];
 
 $view = new Template(__DIR__ . '/../../../skins/frontend/prescriptions');
+$view->setContent('PAGE_STYLES', (string)file_get_contents(__DIR__ . '/../../../skins/frontend/prescriptions.css'));
 $view->setContent('PAGE_HEADING', 'Le tue prescrizioni');
 $view->setContent('PAGE_LEAD', 'Consulta lo storico delle prescrizioni emesse dai medici che ti hanno seguito.');
 $view->setContent('HAS_PRESCRIPTIONS', empty($prescriptions) ? '' : '1');
