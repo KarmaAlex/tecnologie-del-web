@@ -1,0 +1,104 @@
+<style><[PAGE_STYLES]></style>
+
+<section class="patient-page-head">
+	<div class="container">
+		<p class="eyebrow">Area Amministrativa</p>
+		<h1><[PAGE_HEADING]></h1>
+		<p class="lead"><[PAGE_LEAD]></p>
+	</div>
+</section>
+
+<section class="patient-dashboard-grid container">
+	<article class="patient-panel">
+		<h2>Operazione</h2>
+		<[if!empty FORM_MESSAGE]>
+			<p class="<[FORM_MESSAGE_CLASS]>"><[FORM_MESSAGE]></p>
+		<[/if!empty]>
+		<form class="patient-form-grid" method="post" action="crud_departments.php">
+			<input type="hidden" name="csrf_token" value="<[CREATE_CSRF_TOKEN]>">
+			<input type="hidden" name="action" value="create">
+			<div class="patient-field-group">
+				<label for="name">Nome reparto</label>
+				<input id="name" name="name" type="text" value="<[DEPARTMENT_NAME]>" required>
+			</div>
+			<div class="patient-field-group">
+				<label for="description">Descrizione</label>
+				<textarea id="description" name="description" placeholder="Descrizione del reparto..."><[DEPARTMENT_DESCRIPTION]></textarea>
+			</div>
+			<button type="submit" class="btn-primary">Aggiungi reparto</button>
+		</form>
+	</article>
+
+	<article class="patient-panel">
+		<h2>Elenco reparti</h2>
+		<[ifempty HAS_DEPARTMENTS]>
+			<p class="empty-note">Non sono presenti reparti.</p>
+		<[/ifempty]>
+		<[if!empty HAS_DEPARTMENTS]>
+			<div class="patient-table-wrap">
+				<table class="patient-data-table">
+					<thead>
+						<tr>
+							<th>Reparto</th>
+							<th>Descrizione</th>
+							<th>Medici</th>
+							<th>Azioni</th>
+						</tr>
+					</thead>
+					<tbody>
+						<[foreach]>
+						<tr>
+							<td><[DEPT_NAME]></td>
+							<td><[DEPT_DESCRIPTION]></td>
+							<td><[DEPT_DOCTOR_COUNT]></td>
+							<td class="table-actions">
+								<button type="button" class="btn-action" data-department-modal-open="<[DEPT_ID]>" data-department-name="<[DEPT_NAME]>">Medici</button>
+								<form method="post" action="crud_departments.php">
+									<input type="hidden" name="csrf_token" value="<[DELETE_CSRF_TOKEN]>">
+									<input type="hidden" name="action" value="delete">
+									<input type="hidden" name="department_id" value="<[DEPT_ID]>">
+									<button type="submit" class="btn-action btn-danger">Elimina</button>
+								</form>
+							</td>
+						</tr>
+						<[/foreach]>
+					</tbody>
+				</table>
+			</div>
+		<[/if!empty]>
+	</article>
+</section>
+
+<dialog class="department-modal" id="department-modal" aria-labelledby="department-modal-title">
+	<div class="department-modal-header">
+		<div>
+			<p class="eyebrow">Organizzazione clinica</p>
+			<h2 id="department-modal-title">Medici del reparto</h2>
+		</div>
+		<button type="button" class="modal-close" data-department-modal-close aria-label="Chiudi">&times;</button>
+	</div>
+	<p id="department-modal-message" class="modal-message"></p>
+	<form class="department-assignment-form" method="post" action="crud_departments.php">
+		<input type="hidden" name="csrf_token" value="<[ASSIGN_CSRF_TOKEN]>">
+		<input type="hidden" name="department_id" id="assignment-department-id" value="">
+		<input type="hidden" name="doctor_id" id="assignment-doctor-id" value="">
+		<input type="hidden" name="action" id="assignment-action" value="assign_doctor">
+		<div class="patient-field-group">
+			<label for="available-doctors">Aggiungi o sposta medico</label>
+			<div class="assignment-controls">
+				<select id="available-doctors">
+					<option value="">Seleziona un medico</option>
+				</select>
+				<button type="submit" class="btn-primary" data-assignment-submit>Assegna</button>
+			</div>
+		</div>
+	</form>
+	<div class="assigned-doctors-block">
+		<h3>Medici assegnati</h3>
+		<ul id="assigned-doctors" class="assigned-doctors-list"></ul>
+		<p id="no-assigned-doctors" class="empty-note">Nessun medico assegnato.</p>
+	</div>
+</dialog>
+
+<script type="application/json" id="department-doctors-data"><[DOCTORS_JSON]></script>
+<script src="/assets/js/departments.js" defer></script>

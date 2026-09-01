@@ -298,6 +298,33 @@ a:focus-visible {
 	padding: 0.5rem 0.75rem;
 }
 
+.nav-items {
+	display: flex;
+	gap: 0.6rem;
+	flex-wrap: wrap;
+}
+
+.btn-nav {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 40px;
+	padding: 0.4rem 0.9rem;
+	border-radius: 8px;
+	text-decoration: none;
+	font-weight: 600;
+	font-size: 0.94rem;
+	color: var(--brand-deep);
+	background: #ffffff;
+	border: 1px solid #9bbab1;
+	transition: transform 0.14s ease, box-shadow 0.14s ease, background-color 0.14s ease;
+}
+
+.btn-nav:hover {
+	background: #f0f6f4;
+	transform: translateY(-1px);
+}
+
 .site-footer {
 	border-top: 1px solid #d7e4e0;
 	background: #f6faf8;
@@ -423,6 +450,10 @@ a:focus-visible {
 
 @media (max-width: 760px) {
 	.nav-right .btn-outline {
+		display: none;
+	}
+
+	.nav-items {
 		display: none;
 	}
 

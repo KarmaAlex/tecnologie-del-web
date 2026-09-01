@@ -1,0 +1,71 @@
+<style><[PAGE_STYLES]></style>
+
+<section class="patient-page-head">
+	<div class="container">
+		<p class="eyebrow">Area Medica</p>
+		<h1><[PAGE_HEADING]></h1>
+		<p class="lead"><[PAGE_LEAD]></p>
+	</div>
+</section>
+
+<section class="patient-dashboard-grid container">
+	<article class="patient-panel">
+		<h2>Registra nota clinica</h2>
+		<[if!empty FORM_MESSAGE]>
+			<p class="<[FORM_MESSAGE_CLASS]>"><[FORM_MESSAGE]></p>
+		<[/if!empty]>
+
+		<form class="patient-form-grid" method="post" action="update_medical_log.php">
+			<input type="hidden" name="csrf_token" value="<[CSRF_TOKEN]>">
+			<input type="hidden" name="action" value="save">
+
+			<div class="patient-field-group">
+				<label for="patient_id">Paziente</label>
+				<select id="patient_id" name="patient_id" required>
+					<option value="">Seleziona un paziente</option>
+					<[foreach]>
+						<option value="<[PATIENT_OPTION_ID]>" <[PATIENT_OPTION_SELECTED]>> <[PATIENT_OPTION_NAME]></option>
+					<[/foreach]>
+				</select>
+			</div>
+
+			<div class="patient-field-group">
+				<label for="appointment_id">Visita</label>
+				<select id="appointment_id" name="appointment_id" required>
+					<option value="">Seleziona una visita</option>
+					<[foreach]>
+						<option value="<[APPOINTMENT_OPTION_ID]>" <[APPOINTMENT_OPTION_SELECTED]>> <[APPOINTMENT_OPTION_LABEL]></option>
+					<[/foreach]>
+				</select>
+			</div>
+
+			<div class="patient-field-group">
+				<label for="note">Nota clinica</label>
+				<textarea id="note" name="note" rows="8" required placeholder="Inserisci la nota medica..."><[NOTE_VALUE]></textarea>
+			</div>
+
+			<button type="submit" class="btn btn-primary">Salva nota</button>
+		</form>
+	</article>
+
+	<article class="patient-panel">
+		<h2>Note recenti</h2>
+		<[ifempty HAS_RECENT_LOGS]>
+			<p class="empty-note">Nessuna nota clinica registrata di recente.</p>
+		<[/ifempty]>
+		<[if!empty HAS_RECENT_LOGS]>
+			<div class="log-list">
+				<[foreach]>
+				<div class="log-card">
+					<div class="log-card-head">
+						<strong><[LOG_ENTRY_PATIENT]></strong>
+						<span class="log-card-date"><[LOG_ENTRY_DATE]></span>
+					</div>
+					<p><strong>Motivo:</strong> <[LOG_ENTRY_REASON]></p>
+					<p><[LOG_ENTRY_NOTE]></p>
+				</div>
+				<[/foreach]>
+			</div>
+		<[/if!empty]>
+	</article>
+</section>
