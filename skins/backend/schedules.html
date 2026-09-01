@@ -1,0 +1,94 @@
+<style><[PAGE_STYLES]></style>
+
+<section class="patient-page-head">
+	<div class="container">
+		<p class="eyebrow">Area Amministrativa</p>
+		<h1><[PAGE_HEADING]></h1>
+		<p class="lead"><[PAGE_LEAD]></p>
+	</div>
+</section>
+
+<section class="patient-dashboard-grid container">
+	<article class="patient-panel">
+		<h2>Nuova disponibilità</h2>
+		<[if!empty FORM_MESSAGE]>
+			<p class="<[FORM_MESSAGE_CLASS]>"><[FORM_MESSAGE]></p>
+		<[/if!empty]>
+
+		<form class="patient-form-grid" method="post" action="manage_schedules.php">
+			<input type="hidden" name="csrf_token" value="<[FORM_CSRF_TOKEN]>">
+			<input type="hidden" name="action" value="<[FORM_ACTION]>">
+			<input type="hidden" name="schedule_id" value="<[SCHEDULE_ID_INPUT]>">
+
+			<div class="patient-field-group">
+				<label for="doctor_id">Medico</label>
+				<select id="doctor_id" name="doctor_id" required>
+					<option value="">Seleziona un medico</option>
+					<[foreach]>
+						<option value="<[DOCTOR_OPTION_ID]>" <[DOCTOR_OPTION_SELECTED]>> <[DOCTOR_OPTION_LABEL]></option>
+					<[/foreach]>
+				</select>
+			</div>
+
+			<div class="patient-field-group">
+				<label for="start_at">Inizio</label>
+				<input id="start_at" name="start_at" type="datetime-local" value="<[START_AT_VALUE]>" required>
+			</div>
+
+			<div class="patient-field-group">
+				<label for="end_at">Fine</label>
+				<input id="end_at" name="end_at" type="datetime-local" value="<[END_AT_VALUE]>" required>
+			</div>
+
+			<div class="patient-field-group">
+				<label for="location">Ubicazione</label>
+				<input id="location" name="location" type="text" value="<[LOCATION_VALUE]>" placeholder="Ambulatorio / sala visita">
+			</div>
+
+			<button type="submit" class="btn btn-primary">Salva disponibilità</button>
+		</form>
+	</article>
+
+	<article class="patient-panel">
+		<h2>Disponibilità programmate</h2>
+		<[ifempty HAS_SCHEDULES]>
+			<p class="empty-note">Non sono presenti disponibilità programmate.</p>
+		<[/ifempty]>
+		<[if!empty HAS_SCHEDULES]>
+			<div class="patient-table-wrap">
+				<table class="patient-data-table">
+					<thead>
+						<tr>
+							<th>Medico</th>
+							<th>Reparto</th>
+							<th>Inizio</th>
+							<th>Fine</th>
+							<th>Location</th>
+							<th>Azioni</th>
+						</tr>
+					</thead>
+					<tbody>
+						<[foreach]>
+						<tr>
+							<td><[SCHEDULE_DOCTOR_NAME]></td>
+							<td><[SCHEDULE_DEPARTMENT]></td>
+							<td><[SCHEDULE_START]></td>
+							<td><[SCHEDULE_END]></td>
+							<td><[SCHEDULE_LOCATION]></td>
+							<td class="table-actions">
+								<a href="<[SCHEDULE_EDIT_URL]>" class="btn-action">Modifica</a>
+								<form method="post" action="manage_schedules.php">
+									<input type="hidden" name="csrf_token" value="<[DELETE_CSRF_TOKEN]>">
+									<input type="hidden" name="action" value="delete">
+									<input type="hidden" name="schedule_id" value="<[SCHEDULE_DELETE_ID]>">
+									<button type="submit" class="btn-action btn-danger">Elimina</button>
+								</form>
+							</td>
+						</tr>
+						<[/foreach]>
+					</tbody>
+				</table>
+			</div>
+		<[/if!empty]>
+	</article>
+</section>

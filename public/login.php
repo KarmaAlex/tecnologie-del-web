@@ -4,6 +4,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../include/session.php';
 require_once __DIR__ . '/../include/template2.inc.php';
+require_once __DIR__ . '/../include/functions.php';
 
 bootstrapSession();
 
@@ -156,8 +157,6 @@ $base->setContent('PAGE_TITLE', 'MedCare Portal - Sign In');
 $base->setContent('META_DESCRIPTION', 'Sign in to MedCare Portal to access role-specific healthcare services.');
 $base->setContent('BRAND_NAME', 'MedCare Portal');
 $base->setContent('NAV_WELCOME', 'Secure authentication area');
-$base->setContent('NAV_ACTION_URL', 'index.php');
-$base->setContent('NAV_ACTION_TEXT', 'Back to Home');
 $base->setContent('PAGE_CONTENT', $contentHtml);
 $base->setContent('CURRENT_YEAR', date('Y'));
 

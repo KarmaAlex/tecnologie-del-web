@@ -9,9 +9,7 @@ require_once __DIR__ . '/../../../include/template2.inc.php';
 
 bootstrapSession();
 
-// Gatekeeper: only logged-in users whose groups authorize this service may proceed.
 $user = requireService();
-
 $pdo = getPDO();
 $userId = (int)($user['id'] ?? 0);
 $patientProfileId = getPatientProfileId($pdo, $userId);
@@ -19,14 +17,32 @@ $patientProfileId = getPatientProfileId($pdo, $userId);
 $formMessage = '';
 $formMessageClass = 'alert is-hidden';
 $reasonValue = '';
+$selectedDepartmentId = (int)($_POST['department_id'] ?? $_GET['department_id'] ?? 0);
+$selectedDoctorId = (int)($_POST['doctor_id'] ?? $_GET['doctor_id'] ?? 0);
 
-/**
- * Fetches upcoming (future) doctor schedules with doctor/department/specialization
- * labels, so the patient can pick an available slot.
- */
-function fetchAvailableSchedules(PDO $pdo): array
+function fetchDepartments(PDO $pdo): array
 {
-	$sql = 'SELECT sc.id, sc.start_at, sc.end_at, sc.location,
+	$stmt = $pdo->prepare('SELECT id, name FROM departments ORDER BY name ASC');
+	$stmt->execute();
+	return $stmt->fetchAll();
+}
+
+function fetchDoctorsByDepartment(PDO $pdo, int $departmentId): array
+{
+	$stmt = $pdo->prepare('SELECT dp.id, u.full_name, d.name AS department_name, sp.name AS specialization_name
+			FROM doctor_profiles dp
+			INNER JOIN users u ON u.id = dp.user_id
+			LEFT JOIN departments d ON d.id = dp.department_id
+			LEFT JOIN specializations sp ON sp.id = dp.specialization_id
+			WHERE dp.department_id = :department_id
+			ORDER BY u.full_name ASC');
+	$stmt->execute([':department_id' => $departmentId]);
+	return $stmt->fetchAll();
+}
+
+function fetchAvailableSchedules(PDO $pdo, ?int $departmentId = null, ?int $doctorId = null): array
+{
+	$sql = 'SELECT sc.id, sc.doctor_id, sc.start_at, sc.end_at, sc.location,
 				u.full_name AS doctor_name,
 				d.name AS department_name,
 				sp.name AS specialization_name
@@ -35,18 +51,25 @@ function fetchAvailableSchedules(PDO $pdo): array
 			INNER JOIN users u ON u.id = dp.user_id
 			LEFT JOIN departments d ON d.id = dp.department_id
 			LEFT JOIN specializations sp ON sp.id = dp.specialization_id
-			WHERE sc.start_at >= NOW()
-			ORDER BY sc.start_at ASC';
+			WHERE sc.start_at >= NOW()';
 
+	$params = [];
+	if ($departmentId !== null && $departmentId > 0) {
+		$sql .= ' AND dp.department_id = :department_id';
+		$params[':department_id'] = $departmentId;
+	}
+	if ($doctorId !== null && $doctorId > 0) {
+		$sql .= ' AND dp.id = :doctor_id';
+		$params[':doctor_id'] = $doctorId;
+	}
+
+	$sql .= ' ORDER BY sc.start_at ASC';
 	$stmt = $pdo->prepare($sql);
-	$stmt->execute();
+	$stmt->execute($params);
 
 	return $stmt->fetchAll();
 }
 
-/**
- * Fetches the patient's own appointments, most recent first.
- */
 function fetchPatientAppointments(PDO $pdo, int $patientProfileId): array
 {
 	$sql = 'SELECT a.id, a.appointment_at, a.status,
@@ -61,25 +84,17 @@ function fetchPatientAppointments(PDO $pdo, int $patientProfileId): array
 
 	$stmt = $pdo->prepare($sql);
 	$stmt->execute([':patient_id' => $patientProfileId]);
-
 	return $stmt->fetchAll();
 }
 
-/**
- * Loads a single schedule row by id, or null if it does not exist.
- */
 function fetchScheduleById(PDO $pdo, int $scheduleId): ?array
 {
 	$stmt = $pdo->prepare('SELECT id, doctor_id, start_at, end_at FROM schedules WHERE id = :id LIMIT 1');
 	$stmt->execute([':id' => $scheduleId]);
 	$row = $stmt->fetch();
-
 	return $row !== false ? $row : null;
 }
 
-/**
- * Confirms an appointment belongs to the given patient before cancelling it.
- */
 function cancelAppointment(PDO $pdo, int $appointmentId, int $patientProfileId): bool
 {
 	$sql = "UPDATE appointments
@@ -88,13 +103,14 @@ function cancelAppointment(PDO $pdo, int $appointmentId, int $patientProfileId):
 
 	$stmt = $pdo->prepare($sql);
 	$stmt->execute([':id' => $appointmentId, ':patient_id' => $patientProfileId]);
-
 	return $stmt->rowCount() > 0;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$token = (string)($_POST['csrf_token'] ?? '');
 	$action = (string)($_POST['action'] ?? '');
+	$selectedDepartmentId = (int)($_POST['department_id'] ?? 0);
+	$selectedDoctorId = (int)($_POST['doctor_id'] ?? 0);
 
 	if (!verifyCsrfToken($token)) {
 		$formMessage = 'Sessione scaduta, riprova.';
@@ -106,32 +122,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		$scheduleId = (int)($_POST['schedule_id'] ?? 0);
 		$reasonValue = trim((string)($_POST['reason'] ?? ''));
 
-		if ($scheduleId <= 0 || $reasonValue === '') {
-			$formMessage = 'Seleziona una disponibilità e indica il motivo della visita.';
+		if ($selectedDepartmentId <= 0 || $selectedDoctorId <= 0 || $scheduleId <= 0 || $reasonValue === '') {
+			$formMessage = 'Seleziona reparto, medico, disponibilità e motivo della visita.';
 			$formMessageClass = 'alert alert-error';
 		} else {
 			$schedule = fetchScheduleById($pdo, $scheduleId);
-
-			if ($schedule === null || strtotime((string)$schedule['start_at']) < time()) {
-				$formMessage = 'La disponibilità selezionata non è più valida.';
+			if ($schedule === null || (int)$schedule['doctor_id'] !== $selectedDoctorId || strtotime((string)$schedule['start_at']) < time()) {
+				$formMessage = 'La disponibilità selezionata non è più valida per il medico scelto.';
 				$formMessageClass = 'alert alert-error';
 			} else {
 				try {
-					$insert = $pdo->prepare(
-						'INSERT INTO appointments (patient_id, doctor_id, schedule_id, appointment_at, status, reason)
-						 VALUES (:patient_id, :doctor_id, :schedule_id, :appointment_at, \'booked\', :reason)'
-					);
-					$insert->execute([
+					$existing = $pdo->prepare('SELECT id FROM appointments WHERE patient_id = :patient_id AND schedule_id = :schedule_id AND status IN (\'booked\',\'confirmed\') LIMIT 1');
+					$existing->execute([
 						':patient_id' => $patientProfileId,
-						':doctor_id' => $schedule['doctor_id'],
-						':schedule_id' => $schedule['id'],
-						':appointment_at' => $schedule['start_at'],
-						':reason' => $reasonValue,
+						':schedule_id' => $scheduleId,
 					]);
-
-					$formMessage = 'Prenotazione confermata con successo.';
-					$formMessageClass = 'alert alert-success';
-					$reasonValue = '';
+					if ($existing->fetch() !== false) {
+						$formMessage = 'Hai già prenotato questa disponibilità.';
+						$formMessageClass = 'alert alert-error';
+					} else {
+						$insert = $pdo->prepare(
+							'INSERT INTO appointments (patient_id, doctor_id, schedule_id, appointment_at, status, reason)
+							 VALUES (:patient_id, :doctor_id, :schedule_id, :appointment_at, \'booked\', :reason)'
+						);
+						$insert->execute([
+							':patient_id' => $patientProfileId,
+							':doctor_id' => $schedule['doctor_id'],
+							':schedule_id' => $schedule['id'],
+							':appointment_at' => $schedule['start_at'],
+							':reason' => $reasonValue,
+						]);
+						$formMessage = 'Prenotazione confermata con successo.';
+						$formMessageClass = 'alert alert-success';
+						$reasonValue = '';
+					}
 				} catch (Throwable $e) {
 					error_log('Booking error: ' . $e->getMessage());
 					$formMessage = 'Non è stato possibile completare la prenotazione. Riprova più tardi.';
@@ -141,7 +165,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		}
 	} elseif ($action === 'cancel') {
 		$appointmentId = (int)($_POST['appointment_id'] ?? 0);
-
 		if ($patientProfileId !== null && $appointmentId > 0 && cancelAppointment($pdo, $appointmentId, $patientProfileId)) {
 			$formMessage = 'Prenotazione annullata.';
 			$formMessageClass = 'alert alert-success';
@@ -152,24 +175,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	}
 }
 
-$availableSchedules = fetchAvailableSchedules($pdo);
+$departments = fetchDepartments($pdo);
+$doctors = $selectedDepartmentId > 0 ? fetchDoctorsByDepartment($pdo, $selectedDepartmentId) : [];
+$availableSchedules = fetchAvailableSchedules($pdo, $selectedDepartmentId > 0 ? $selectedDepartmentId : null, $selectedDoctorId > 0 ? $selectedDoctorId : null);
 $appointments = $patientProfileId !== null ? fetchPatientAppointments($pdo, $patientProfileId) : [];
 
 $booking = new Template(__DIR__ . '/../../../skins/frontend/booking');
 $booking->setContent('PAGE_STYLES', (string)file_get_contents(__DIR__ . '/../../../skins/frontend/booking.css'));
 $booking->setContent('PAGE_HEADING', 'Prenota una visita');
-$booking->setContent('PAGE_LEAD', 'Scegli una disponibilità tra quelle offerte dai nostri medici e gestisci le tue prenotazioni.');
+$booking->setContent('PAGE_LEAD', 'Scegli reparto, medico e fascia oraria disponibili per confermare la visita.');
 $booking->setContent('FORM_MESSAGE', $formMessage);
 $booking->setContent('FORM_MESSAGE_CLASS', $formMessageClass);
 $booking->setContent('CAN_BOOK', $patientProfileId === null ? '1' : '');
 $booking->setContent('CSRF_TOKEN', csrfToken());
 $booking->setContent('REASON_VALUE', esc($reasonValue));
+$booking->setContent('SELECTED_DEPARTMENT_ID', (string)$selectedDepartmentId);
+$booking->setContent('SELECTED_DOCTOR_ID', (string)$selectedDoctorId);
+$booking->setContent('HAS_DEPARTMENTS', empty($departments) ? '' : '1');
+$booking->setContent('HAS_DOCTORS', empty($doctors) ? '' : '1');
+$booking->setContent('HAS_SLOTS', empty($availableSchedules) ? '' : '1');
 
-if (empty($availableSchedules)) {
-	$booking->setContent('SLOT_ID', '');
-	$booking->setContent('SLOT_LABEL', 'Nessuna disponibilità al momento');
-	$booking->setContent('SLOT_SELECTED', 'disabled');
-} else {
+foreach ($departments as $department) {
+	$selected = ((int)$department['id'] === $selectedDepartmentId) ? 'selected' : '';
+	$booking->setContent('DEPT_OPTION_ID', (string)$department['id']);
+	$booking->setContent('DEPT_OPTION_LABEL', esc((string)$department['name']));
+	$booking->setContent('DEPT_OPTION_SELECTED', $selected);
+}
+
+foreach ($doctors as $doctor) {
+	$selected = ((int)$doctor['id'] === $selectedDoctorId) ? 'selected' : '';
+	$booking->setContent('DOCTOR_OPTION_ID', (string)$doctor['id']);
+	$booking->setContent('DOCTOR_OPTION_LABEL', esc((string)$doctor['full_name'] . ' - ' . ($doctor['specialization_name'] ?? 'Generale')));
+	$booking->setContent('DOCTOR_OPTION_SELECTED', $selected);
+}
+
+if (!empty($availableSchedules)) {
 	foreach ($availableSchedules as $slot) {
 		$label = sprintf(
 			'%s - Dr. %s (%s)%s',
@@ -178,7 +218,6 @@ if (empty($availableSchedules)) {
 			$slot['department_name'] ?? $slot['specialization_name'] ?? 'Ambulatorio generico',
 			!empty($slot['location']) ? ' - ' . $slot['location'] : ''
 		);
-
 		$booking->setContent('SLOT_ID', (string)$slot['id']);
 		$booking->setContent('SLOT_LABEL', esc($label));
 		$booking->setContent('SLOT_SELECTED', '');
@@ -186,11 +225,9 @@ if (empty($availableSchedules)) {
 }
 
 $booking->setContent('HAS_APPOINTMENTS', empty($appointments) ? '' : '1');
-
 foreach ($appointments as $appt) {
 	[$statusLabel, $statusClass] = appointmentStatusBadge((string)$appt['status']);
 	$canCancel = in_array($appt['status'], ['booked', 'confirmed'], true);
-
 	$booking->setContent('APPT_DATE', esc(formatDateTimeIt((string)$appt['appointment_at'])));
 	$booking->setContent('APPT_DOCTOR', esc($appt['doctor_name'] ?? 'N/D'));
 	$booking->setContent('APPT_DEPARTMENT', esc($appt['department_name'] ?? 'N/D'));
@@ -205,7 +242,6 @@ foreach ($appointments as $appt) {
 			. '<button type="submit" class="btn btn-danger-outline btn-small">Annulla</button>'
 			. '</form>';
 	}
-
 	$booking->setContent('APPT_CANCEL_HTML', $cancelHtml);
 }
 
@@ -216,10 +252,7 @@ $base->setContent('PAGE_TITLE', 'MedCare Portal - Prenota una visita');
 $base->setContent('META_DESCRIPTION', 'Prenota una visita medica e consulta le tue prenotazioni su MedCare Portal.');
 $base->setContent('BRAND_NAME', 'MedCare Portal');
 $base->setContent('NAV_WELCOME', 'Ciao, ' . esc((string)($user['full_name'] ?? $user['username'])));
-$base->setContent('NAV_ACTION_URL', '../../index.php');
-$base->setContent('NAV_ACTION_TEXT', 'Home');
-$base->setContent('NAV_SECONDARY_ACTION_URL', '../../logout.php');
-$base->setContent('NAV_SECONDARY_ACTION_TEXT', 'Esci');
+populateBaseNavigation($base, (string)($user['role'] ?? 'patient'), '../../logout.php', 'Esci');
 $base->setContent('PAGE_CONTENT', $contentHtml);
 $base->setContent('CURRENT_YEAR', date('Y'));
 

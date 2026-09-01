@@ -4,6 +4,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../include/session.php';
 require_once __DIR__ . '/../include/template2.inc.php';
+require_once __DIR__ . '/../include/functions.php';
 
 bootstrapSession();
 
@@ -94,10 +95,9 @@ $base->setContent('PAGE_TITLE', 'MedCare Portal - Professional Healthcare Access
 $base->setContent('META_DESCRIPTION', 'MedCare Portal is a professional healthcare platform for patients, medical staff, and administrators.');
 $base->setContent('BRAND_NAME', 'MedCare Portal');
 $base->setContent('NAV_WELCOME', $isLoggedIn ? 'Signed in as ' . esc($displayName) : 'Professional healthcare platform');
-$base->setContent('NAV_ACTION_URL', $navActionUrl);
-$base->setContent('NAV_ACTION_TEXT', $navActionText);
-$base->setContent('NAV_SECONDARY_ACTION_URL', $navSecondaryActionUrl);
-$base->setContent('NAV_SECONDARY_ACTION_TEXT', $navSecondaryActionText);
+if ($isLoggedIn) {
+	populateBaseNavigation($base, $role, 'logout.php', 'Sign Out');
+}
 $base->setContent('PAGE_CONTENT', $contentHtml);
 $base->setContent('CURRENT_YEAR', date('Y'));
 

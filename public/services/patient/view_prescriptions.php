@@ -96,10 +96,7 @@ $base->setContent('PAGE_TITLE', 'MedCare Portal - Le tue prescrizioni');
 $base->setContent('META_DESCRIPTION', 'Consulta lo storico delle tue prescrizioni mediche su MedCare Portal.');
 $base->setContent('BRAND_NAME', 'MedCare Portal');
 $base->setContent('NAV_WELCOME', 'Ciao, ' . esc((string)($user['full_name'] ?? $user['username'])));
-$base->setContent('NAV_ACTION_URL', '../../index.php');
-$base->setContent('NAV_ACTION_TEXT', 'Home');
-$base->setContent('NAV_SECONDARY_ACTION_URL', '../../logout.php');
-$base->setContent('NAV_SECONDARY_ACTION_TEXT', 'Esci');
+populateBaseNavigation($base, (string)($user['role'] ?? 'patient'), '../../logout.php', 'Esci');
 $base->setContent('PAGE_CONTENT', $contentHtml);
 $base->setContent('CURRENT_YEAR', date('Y'));
 

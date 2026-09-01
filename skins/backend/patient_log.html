@@ -1,0 +1,98 @@
+<style><[PAGE_STYLES]></style>
+
+<section class="patient-page-head">
+	<div class="container">
+		<p class="eyebrow">Area Medica</p>
+		<h1><[PAGE_HEADING]></h1>
+		<p class="lead"><[PAGE_LEAD]></p>
+	</div>
+</section>
+
+<section class="patient-dashboard-grid container">
+	<article class="patient-panel">
+		<h2>Profilo medico</h2>
+		<p>Medico attivo: <strong><[DOCTOR_NAME]></strong></p>
+		<div class="patient-metric">
+			<div class="metric-box">
+				<span class="metric-label">Pazienti</span>
+				<span class="metric-value"><[PATIENT_COUNT]></span>
+			</div>
+			<div class="metric-box">
+				<span class="metric-label">Visite</span>
+				<span class="metric-value"><[VISIT_COUNT]></span>
+			</div>
+			<div class="metric-box">
+				<span class="metric-label">Selezione</span>
+				<span class="metric-value"><[SELECTED_PATIENT_ID]></span>
+			</div>
+		</div>
+	</article>
+
+	<article class="patient-panel">
+		<h2>Seleziona paziente</h2>
+		<form class="doctor-filter" method="get" action="view_patient_history.php">
+			<div>
+				<label for="patient_id">Paziente</label>
+				<select id="patient_id" name="patient_id">
+					<option value="">Tutti</option>
+					<[foreach]>
+					<option value="<[PATIENT_OPTION_ID]>" <[PATIENT_OPTION_SELECTED]>><[PATIENT_OPTION_NAME]></option>
+					<[/foreach]>
+				</select>
+			</div>
+			<button type="submit">Mostra</button>
+		</form>
+
+		<[ifempty HAS_PATIENTS]>
+			<p class="empty-note">Nessun paziente associato al tuo profilo.</p>
+		<[/ifempty]>
+
+		<[if!empty HAS_PATIENTS]>
+			<div class="patient-table-wrap">
+				<table class="patient-data-table">
+					<thead>
+						<tr>
+							<th>Paziente</th>
+							<th>Ultima visita</th>
+							<th>Visite</th>
+							<th>Ultima nota</th>
+						</tr>
+					</thead>
+					<tbody>
+						<[foreach]>
+						<tr>
+							<td><[PATIENT_ROW_NAME]></td>
+							<td><[PATIENT_ROW_LAST_VISIT]></td>
+							<td><[PATIENT_ROW_APPOINTMENTS]></td>
+							<td><[PATIENT_ROW_LAST_NOTE]></td>
+						</tr>
+						<[/foreach]>
+					</tbody>
+				</table>
+			</div>
+		<[/if!empty]>
+	</article>
+</section>
+
+<section class="container" style="padding-bottom: 3rem;">
+	<article class="patient-panel">
+		<h2>Dettaglio clinico: <[SELECTED_PATIENT_NAME]></h2>
+		<[ifempty HAS_SELECTED_PATIENT]>
+			<p class="empty-note">Non sono presenti registri clinici per il paziente selezionato.</p>
+		<[/ifempty]>
+		<[if!empty HAS_SELECTED_PATIENT]>
+			<div class="log-list">
+				<[foreach]>
+				<div class="log-card">
+					<div class="log-card-head">
+						<strong>Visita del <[LOG_VISIT_DATE]></strong>
+						<span class="log-card-date"><[LOG_ENTRY_DATE]></span>
+					</div>
+					<p><strong>Motivo:</strong> <[LOG_ENTRY_REASON]></p>
+					<p><[LOG_ENTRY_NOTE]></p>
+				</div>
+				<[/foreach]>
+			</div>
+		<[/if!empty]>
+	</article>
+</section>

@@ -17,19 +17,31 @@
 				<span class="brand-mark" aria-hidden="true"></span>
 				<a class="brand-name" href="index.php"><[BRAND_NAME]></a>
 			</div>
-			<div class="nav-right">
+			<nav class="nav-right">
 				<p class="nav-welcome"><[NAV_WELCOME]></p>
-				<a class="btn btn-primary" href="<[NAV_ACTION_URL]>"><[NAV_ACTION_TEXT]></a>
-				<[if!empty NAV_SECONDARY_ACTION_TEXT]>
-					<a class="btn btn-outline" href="<[NAV_SECONDARY_ACTION_URL]>"><[NAV_SECONDARY_ACTION_TEXT]></a>
+				<[if!empty NAV_ITEMS]>
+					<div class="nav-items">
+						<[foreach]>
+							<a class="btn btn-nav" href="<[NAV_ITEM_URL]>"><[NAV_ITEM_LABEL]></a>
+						<[/foreach]>
+					</div>
+				<[/if!empty]>
+				<[if!empty NAV_LOGOUT_URL]>
+					<a class="btn btn-outline" href="<[NAV_LOGOUT_URL]>"><[NAV_LOGOUT_TEXT]></a>
 				<[/if!empty]>
 				<button type="button" class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="quickMenu">Menu</button>
-			</div>
+			</nav>
 		</div>
 		<div class="quick-menu" id="quickMenu" hidden>
 			<a href="index.php">Home</a>
-			<a href="login.php">Login</a>
-			<a href="logout.php">Logout</a>
+			<[if!empty NAV_ITEMS]>
+				<[foreach]>
+					<a href="<[NAV_ITEM_URL_MOBILE]>"><[NAV_ITEM_LABEL_MOBILE]></a>
+				<[/foreach]>
+			<[/if!empty]>
+			<[if!empty NAV_LOGOUT_URL]>
+				<a href="<[NAV_LOGOUT_URL_MOBILE]>"><[NAV_LOGOUT_TEXT_MOBILE]></a>
+			<[/if!empty]>
 		</div>
 	</header>
 

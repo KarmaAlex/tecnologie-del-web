@@ -17,9 +17,33 @@
 		<[/if!empty]>
 
 		<[ifempty CAN_BOOK]>
+			<form id="booking-filter-form" class="patient-form-grid" method="get" action="book_appointment.php">
+				<div class="patient-field-group">
+					<label for="department_id">Reparto</label>
+					<select id="department_id" name="department_id" required>
+						<option value="">Seleziona un reparto</option>
+						<[foreach]>
+							<option value="<[DEPT_OPTION_ID]>" <[DEPT_OPTION_SELECTED]>><[DEPT_OPTION_LABEL]></option>
+						<[/foreach]>
+					</select>
+				</div>
+
+				<div class="patient-field-group">
+					<label for="doctor_id">Medico</label>
+					<select id="doctor_id" name="doctor_id" required>
+						<option value="">Seleziona un medico</option>
+						<[foreach]>
+							<option value="<[DOCTOR_OPTION_ID]>" <[DOCTOR_OPTION_SELECTED]>><[DOCTOR_OPTION_LABEL]></option>
+						<[/foreach]>
+					</select>
+				</div>
+			</form>
+
 			<form class="patient-form-grid" method="post" action="book_appointment.php">
 				<input type="hidden" name="csrf_token" value="<[CSRF_TOKEN]>">
 				<input type="hidden" name="action" value="book">
+				<input type="hidden" name="department_id" value="<[SELECTED_DEPARTMENT_ID]>">
+				<input type="hidden" name="doctor_id" value="<[SELECTED_DOCTOR_ID]>">
 
 				<div class="patient-field-group">
 					<label for="schedule_id">Disponibilità</label>
@@ -29,7 +53,7 @@
 							<option value="<[SLOT_ID]>" <[SLOT_SELECTED]>><[SLOT_LABEL]></option>
 						<[/foreach]>
 					</select>
-					<p class="patient-field-hint">Medico, reparto e fascia oraria disponibile.</p>
+					<p class="patient-field-hint">Seleziona un medico e poi scegli tra le fasce disponibili.</p>
 				</div>
 
 				<div class="patient-field-group">
@@ -78,34 +102,4 @@
 	</article>
 </section>
 
-<script>
-	document.addEventListener('DOMContentLoaded', function () {
-		var prescriptionsUrl = 'view_prescriptions.php';
-		var prescriptionsLabel = 'Le tue prescrizioni';
-
-		var navRight = document.querySelector('.nav-right');
-		if (navRight && !navRight.querySelector('[data-nav-prescriptions]')) {
-			var navLink = document.createElement('a');
-			navLink.className = 'btn btn-outline';
-			navLink.href = prescriptionsUrl;
-			navLink.textContent = prescriptionsLabel;
-			navLink.setAttribute('data-nav-prescriptions', '1');
-
-			var primaryAction = navRight.querySelector('.btn-primary');
-			if (primaryAction) {
-				navRight.insertBefore(navLink, primaryAction);
-			} else {
-				navRight.appendChild(navLink);
-			}
-		}
-
-		var quickMenu = document.getElementById('quickMenu');
-		if (quickMenu && !quickMenu.querySelector('[data-nav-prescriptions]')) {
-			var mobileLink = document.createElement('a');
-			mobileLink.href = prescriptionsUrl;
-			mobileLink.textContent = prescriptionsLabel;
-			mobileLink.setAttribute('data-nav-prescriptions', '1');
-			quickMenu.insertBefore(mobileLink, quickMenu.firstChild);
-		}
-	});
-</script>
+<script src="/assets/js/booking.js" defer></script>
