@@ -83,4 +83,80 @@ INSERT INTO `prescriptions` (`id`,`patient_id`,`doctor_id`,`issued_at`,`notes`) 
 INSERT INTO `prescription_items` (`id`,`prescription_id`,`medication`,`dosage`,`instructions`,`quantity`) VALUES
 (1,1,'Paracetamolo 500mg','500mg','Assumere una compressa ogni 8 ore se necessario','14');
 
+-- Additional departments
+INSERT INTO `departments` (`id`,`name`,`description`) VALUES
+(3,'Dermatologia','Reparto di dermatologia e cosmetica medica'),
+(4,'Pediatria','Reparto di pediatria generale e specialistica'),
+(5,'Ortopedia','Reparto di ortopedia e traumatologia');
+
+-- Additional specializations
+INSERT INTO `specializations` (`id`,`name`,`description`) VALUES
+(3,'Dermatologo','Specialista in dermatologia'),
+(4,'Pediatra','Specialista in pediatria'),
+(5,'Ortopedico','Specialista in ortopedia');
+
+-- Additional users: 2 doctors + 4 patients
+INSERT INTO `users` (`id`,`username`,`password_hash`,`email`,`full_name`,`phone_number`,`role`,`active`) VALUES
+(6,'dr_romanelli','aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa','alessandro.romanelli@example.it','Alessandro Romanelli','+393401112233','doctor',1),
+(7,'dr_ferretti','aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa','elena.ferretti@example.it','Elena Ferretti','+393401122334','doctor',1),
+(8,'giulia.mancini','aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa','giulia.mancini@example.it','Giulia Mancini','+393456789012','patient',1),
+(9,'luca.belli','aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa','luca.belli@example.it','Luca Belli','+393457890123','patient',1),
+(10,'sofia.pasquali','aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa','sofia.pasquali@example.it','Sofia Pasquali','+393458901234','patient',1),
+(11,'antonio.rizzi','aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa','antonio.rizzi@example.it','Antonio Rizzi','+393459012345','patient',1);
+
+-- Map additional users to groups
+INSERT INTO `users_has_groups` (`user_id`,`group_id`) VALUES
+(6,2),
+(7,2),
+(8,3),
+(9,3),
+(10,3),
+(11,3);
+
+-- Additional doctor profiles
+INSERT INTO `doctor_profiles` (`id`,`user_id`,`department_id`,`specialization_id`,`license_number`,`bio`) VALUES
+(3,6,3,3,'REG-DER-2022-04','Dott. Alessandro Romanelli, dermatologo con esperienza in patologie cutanee e cosmetologia medica.'),
+(4,7,5,5,'REG-ORT-2021-11','Dott.ssa Elena Ferretti, ortopedica specializzata in riabilitazione e patologie articolari.');
+
+-- Additional patient profiles
+INSERT INTO `patient_profiles` (`id`,`user_id`,`dob`,`fiscal_code`) VALUES
+(3,8,'1990-02-20','MNCGLI90B20A001F'),
+(4,9,'1988-07-16','BLLLCA88L16C123Q'),
+(5,10,'2001-05-28','PSQSFA01E28G702X'),
+(6,11,'1976-12-09','RZZNTN76T09F205Z');
+
+-- Additional schedules
+INSERT INTO `schedules` (`id`,`doctor_id`,`start_at`,`end_at`,`location`) VALUES
+(4,1,'2026-09-08 09:00:00','2026-09-08 12:00:00','Ambulatorio D'),
+(5,2,'2026-09-12 15:00:00','2026-09-12 17:30:00','Ambulatorio E'),
+(6,3,'2026-09-09 11:00:00','2026-09-09 14:00:00','Studio Dermatologico'),
+(7,4,'2026-09-10 08:00:00','2026-09-10 10:30:00','Ambulatorio Ortopedia');
+
+-- Additional appointments
+INSERT INTO `appointments` (`id`,`patient_id`,`doctor_id`,`schedule_id`,`appointment_at`,`status`,`reason`) VALUES
+(3,3,1,4,'2026-09-08 09:30:00','confirmed','Follow-up controllo pressione'),
+(4,4,2,5,'2026-09-12 15:30:00','booked','Valutazione sintomi neurologici'),
+(5,5,3,6,'2026-09-09 11:30:00','confirmed','Controllo cute e irritazioni'),
+(6,6,4,7,'2026-09-10 08:45:00','booked','Dolore al ginocchio e mobilità');
+
+-- Additional medical logs
+INSERT INTO `medical_logs` (`id`,`doctor_id`,`patient_id`,`appointment_id`,`note`,`attachments`) VALUES
+(3,1,3,3,'Follow-up cardiologico: pressione stabile, confermata terapia di mantenimento e controllo dopo 30 giorni.',''),
+(4,2,4,4,'Esame neurologico senza alterazioni rilevanti. Richiesto controllo dopo due settimane.',''),
+(5,3,5,5,'Lesione cutanea lieve con irritazione persistente; prescritta crema idratante e monitoraggio.',''),
+(6,4,6,6,'Valutazione articolare: lieve infiammazione. Consigliato riposo, fisioterapia e controllo dopo 10 giorni.','');
+
+-- Additional prescriptions
+INSERT INTO `prescriptions` (`id`,`patient_id`,`doctor_id`,`issued_at`,`notes`) VALUES
+(2,3,1,'2026-09-08 09:40:00','Terapia di mantenimento per 30 giorni'),
+(3,4,2,'2026-09-12 15:45:00','Controllo neurologico e integrazione vitamina B12'),
+(4,5,3,'2026-09-09 11:45:00','Crema topica e idratazione cutanea'),
+(5,6,4,'2026-09-10 09:00:00','Gestione dolore articolare e riabilitazione');
+
+INSERT INTO `prescription_items` (`id`,`prescription_id`,`medication`,`dosage`,`instructions`,`quantity`) VALUES
+(2,2,'Amlodipina 5mg','5mg','Assumere una compressa al giorno dopo pranzo','30'),
+(3,3,'Magnesio 400mg','400mg','Una compressa al giorno dopo cena','30'),
+(4,4,'Idrocolloid Piastra','1 piastra','Applicare sulla zona irritata per 24 ore','10'),
+(5,5,'Ibuprofene 200mg','200mg','Assumere una compressa ogni 12 ore se necessario','20');
+
 COMMIT;
