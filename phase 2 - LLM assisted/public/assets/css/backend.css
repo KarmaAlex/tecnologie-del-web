@@ -1,0 +1,381 @@
+:root {
+	--bk-bg: #eef1f6;
+	--bk-surface: #ffffff;
+	--bk-sidebar: #16233b;
+	--bk-sidebar-active: #23365a;
+	--bk-ink: #1c2536;
+	--bk-ink-muted: #5b6577;
+	--bk-line: #dde2ea;
+	--bk-accent: #2f6fed;
+	--bk-accent-deep: #1d4fbf;
+	--bk-danger: #c0392b;
+	--bk-success: #1e8e5a;
+	--bk-radius: 10px;
+	--bk-shadow: 0 8px 24px rgba(22, 35, 59, 0.08);
+}
+
+* {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font-family: "Segoe UI", "IBM Plex Sans", Arial, sans-serif;
+	color: var(--bk-ink);
+	background: var(--bk-bg);
+	line-height: 1.5;
+	font-size: 14px;
+}
+
+h1, h2, h3 {
+	font-family: inherit;
+	margin-top: 0;
+	font-weight: 600;
+	letter-spacing: 0;
+}
+
+p {
+	margin-top: 0;
+	color: var(--bk-ink-muted);
+}
+
+a {
+	color: var(--bk-accent);
+	text-decoration: none;
+}
+
+.bk-shell {
+	display: grid;
+	grid-template-columns: 240px 1fr;
+	min-height: 100vh;
+}
+
+.bk-sidebar {
+	background: var(--bk-sidebar);
+	color: #dde5f5;
+	padding: 1.4rem 1.1rem;
+	display: flex;
+	flex-direction: column;
+	gap: 1.6rem;
+}
+
+.bk-brand {
+	font-size: 1.05rem;
+	font-weight: 700;
+	color: #ffffff;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.bk-brand-mark {
+	width: 10px;
+	height: 10px;
+	border-radius: 3px;
+	background: var(--bk-accent);
+	display: inline-block;
+}
+
+.bk-nav {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+}
+
+.bk-nav a {
+	color: #b9c4dd;
+	padding: 0.55rem 0.7rem;
+	border-radius: 8px;
+	font-size: 0.92rem;
+	display: block;
+}
+
+.bk-nav a:hover {
+	background: var(--bk-sidebar-active);
+	color: #ffffff;
+}
+
+.bk-nav a.is-active {
+	background: var(--bk-accent);
+	color: #ffffff;
+}
+
+.bk-nav-label {
+	font-size: 0.72rem;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	color: #7d8ab0;
+	margin: 0.6rem 0 0.1rem;
+}
+
+.bk-sidebar-footer {
+	margin-top: auto;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.bk-user-chip {
+	font-size: 0.85rem;
+	color: #b9c4dd;
+}
+
+.bk-logout {
+	background: rgba(255, 255, 255, 0.08);
+	color: #ffffff;
+	text-align: center;
+	padding: 0.5rem;
+	border-radius: 8px;
+	font-size: 0.85rem;
+}
+
+.bk-logout:hover {
+	background: rgba(255, 255, 255, 0.16);
+}
+
+.bk-main {
+	padding: 1.8rem 2.2rem 3rem;
+}
+
+.bk-topbar {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	margin-bottom: 1.4rem;
+	flex-wrap: wrap;
+	gap: 0.6rem;
+}
+
+.bk-topbar h1 {
+	font-size: 1.4rem;
+}
+
+.bk-topbar p {
+	margin: 0;
+	font-size: 0.9rem;
+}
+
+.bk-panel {
+	background: var(--bk-surface);
+	border: 1px solid var(--bk-line);
+	border-radius: var(--bk-radius);
+	box-shadow: var(--bk-shadow);
+	padding: 1.3rem 1.4rem;
+	margin-bottom: 1.2rem;
+}
+
+.bk-panel h2 {
+	font-size: 1.05rem;
+	margin-bottom: 0.9rem;
+}
+
+.bk-grid-2 {
+	display: grid;
+	grid-template-columns: 1.1fr 0.9fr;
+	gap: 1.2rem;
+	align-items: start;
+}
+
+@media (max-width: 980px) {
+	.bk-shell {
+		grid-template-columns: 1fr;
+	}
+
+	.bk-sidebar {
+		flex-direction: row;
+		flex-wrap: wrap;
+		align-items: center;
+	}
+
+	.bk-nav {
+		flex-direction: row;
+		flex-wrap: wrap;
+	}
+
+	.bk-grid-2 {
+		grid-template-columns: 1fr;
+	}
+}
+
+.bk-table-wrap {
+	overflow-x: auto;
+}
+
+.bk-table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 0.88rem;
+}
+
+.bk-table th,
+.bk-table td {
+	text-align: left;
+	padding: 0.55rem 0.6rem;
+	border-bottom: 1px solid var(--bk-line);
+	vertical-align: top;
+}
+
+.bk-table th {
+	color: var(--bk-ink-muted);
+	font-weight: 600;
+	font-size: 0.76rem;
+	text-transform: uppercase;
+	letter-spacing: 0.03em;
+	background: #f6f8fb;
+}
+
+.bk-table tr:hover td {
+	background: #f8faff;
+}
+
+.bk-form-grid {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 0.85rem;
+}
+
+.bk-field label {
+	display: block;
+	font-size: 0.82rem;
+	font-weight: 600;
+	margin-bottom: 0.3rem;
+	color: var(--bk-ink);
+}
+
+.bk-field input,
+.bk-field select,
+.bk-field textarea {
+	width: 100%;
+	border: 1px solid #c7cfdd;
+	border-radius: 8px;
+	padding: 0.5rem 0.65rem;
+	font: inherit;
+	color: var(--bk-ink);
+	background: #ffffff;
+}
+
+.bk-field textarea {
+	min-height: 80px;
+	resize: vertical;
+}
+
+.bk-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border: none;
+	border-radius: 8px;
+	padding: 0.55rem 1.1rem;
+	font-size: 0.88rem;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.bk-btn-primary {
+	background: var(--bk-accent);
+	color: #ffffff;
+}
+
+.bk-btn-primary:hover {
+	background: var(--bk-accent-deep);
+}
+
+.bk-btn-danger {
+	background: #fdeceb;
+	color: var(--bk-danger);
+}
+
+.bk-btn-danger:hover {
+	background: #f9d8d5;
+}
+
+.bk-btn-ghost {
+	background: #eef1f6;
+	color: var(--bk-ink);
+}
+
+.bk-btn-small {
+	padding: 0.32rem 0.7rem;
+	font-size: 0.78rem;
+}
+
+.bk-alert {
+	border-radius: 8px;
+	padding: 0.6rem 0.85rem;
+	font-size: 0.88rem;
+	margin-bottom: 1rem;
+}
+
+.bk-alert-success {
+	background: #e6f6ee;
+	color: var(--bk-success);
+	border: 1px solid #b9e6cc;
+}
+
+.bk-alert-error {
+	background: #fdeceb;
+	color: var(--bk-danger);
+	border: 1px solid #f3c3bd;
+}
+
+.bk-alert.is-hidden {
+	display: none;
+}
+
+.bk-badge {
+	display: inline-block;
+	padding: 0.18rem 0.55rem;
+	border-radius: 999px;
+	font-size: 0.72rem;
+	font-weight: 700;
+}
+
+.bk-badge-booked { background: #fdf1dd; color: #92600c; }
+.bk-badge-confirmed { background: #e1f0fb; color: #12557f; }
+.bk-badge-completed { background: #e6f6ee; color: #1e8e5a; }
+.bk-badge-cancelled { background: #fdeceb; color: #c0392b; }
+
+.bk-empty-note {
+	color: var(--bk-ink-muted);
+	font-style: italic;
+}
+
+.bk-inline-form {
+	display: inline;
+}
+
+.bk-search-form {
+	display: flex;
+	gap: 0.6rem;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	margin-bottom: 1rem;
+}
+
+.bk-search-form .bk-field {
+	flex: 1;
+	min-width: 220px;
+}
+
+.bk-history-card {
+	border: 1px solid var(--bk-line);
+	border-radius: var(--bk-radius);
+	padding: 0.9rem 1rem;
+	margin-bottom: 0.7rem;
+	background: #fbfcfe;
+}
+
+.bk-history-card:last-child {
+	margin-bottom: 0;
+}
+
+.bk-history-meta {
+	font-size: 0.78rem;
+	color: var(--bk-ink-muted);
+	margin-bottom: 0.2rem;
+}
