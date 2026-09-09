@@ -1,0 +1,73 @@
+<div class="bk-grid-2">
+	<section class="bk-panel">
+		<h2>Nuova disponibilità</h2>
+		<form class="bk-form-grid" method="post" action="manage_schedules.php">
+			<input type="hidden" name="csrf_token" value="<[CSRF_TOKEN]>">
+			<input type="hidden" name="action" value="create">
+
+			<div class="bk-field">
+				<label for="doctor_id">Medico</label>
+				<select id="doctor_id" name="doctor_id" required>
+					<option value="">Seleziona un medico</option>
+					<[foreach]>
+						<option value="<[DOC_ID]>"><[DOC_LABEL]></option>
+					<[/foreach]>
+				</select>
+			</div>
+
+			<div class="bk-field">
+				<label for="start_at">Inizio</label>
+				<input type="datetime-local" id="start_at" name="start_at" required>
+			</div>
+
+			<div class="bk-field">
+				<label for="end_at">Fine</label>
+				<input type="datetime-local" id="end_at" name="end_at" required>
+			</div>
+
+			<div class="bk-field">
+				<label for="location">Ambulatorio / Sede</label>
+				<input type="text" id="location" name="location" maxlength="255">
+			</div>
+
+			<button type="submit" class="bk-btn bk-btn-primary">Crea disponibilità</button>
+		</form>
+	</section>
+
+	<section class="bk-panel">
+		<h2>Disponibilità pianificate</h2>
+
+		<[ifempty HAS_SCHEDULES]>
+			<p class="bk-empty-note">Nessuna disponibilità pianificata.</p>
+		<[/ifempty]>
+
+		<[if!empty HAS_SCHEDULES]>
+			<div class="bk-table-wrap">
+				<table class="bk-table">
+					<thead>
+						<tr>
+							<th>Medico</th>
+							<th>Dal</th>
+							<th>Al</th>
+							<th>Sede</th>
+							<th>Prenotazioni</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<[foreach]>
+							<tr>
+								<td><[SCHED_DOCTOR]></td>
+								<td><[SCHED_START]></td>
+								<td><[SCHED_END]></td>
+								<td><[SCHED_LOCATION]></td>
+								<td><[SCHED_BOOKED_COUNT]></td>
+								<td><[SCHED_DELETE_HTML]></td>
+							</tr>
+						<[/foreach]>
+					</tbody>
+				</table>
+			</div>
+		<[/if!empty]>
+	</section>
+</div>

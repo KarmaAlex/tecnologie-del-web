@@ -1,0 +1,144 @@
+.patient-page-head {
+	padding: 2.6rem 0 1.2rem;
+}
+
+.patient-page-head h1 {
+	margin-bottom: 0.4rem;
+}
+
+.patient-dashboard-grid {
+	display: grid;
+	grid-template-columns: 1.05fr 0.95fr;
+	gap: 1.2rem;
+	padding-bottom: 3rem;
+	align-items: start;
+}
+
+.patient-panel {
+	background: var(--surface);
+	border: 1px solid #dbe7e3;
+	border-radius: var(--radius);
+	box-shadow: var(--shadow);
+	padding: 1.5rem;
+}
+
+.patient-panel h2 {
+	font-size: 1.2rem;
+	margin-bottom: 0.9rem;
+}
+
+.patient-form-grid {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 1rem;
+}
+
+.patient-field-group label {
+	display: block;
+	margin-bottom: 0.35rem;
+	color: var(--ink-strong);
+	font-weight: 600;
+}
+
+.patient-field-group select,
+.patient-field-group textarea {
+	width: 100%;
+	border-radius: 10px;
+	border: 1px solid #b8cec7;
+	padding: 0.55rem 0.7rem;
+	font: inherit;
+	color: var(--ink-strong);
+	background: #ffffff;
+	min-height: 44px;
+}
+
+.patient-field-group textarea {
+	min-height: 90px;
+	resize: vertical;
+}
+
+.patient-field-hint {
+	font-size: 0.85rem;
+	margin-top: 0.3rem;
+	margin-bottom: 0;
+	color: var(--ink-muted);
+}
+
+.patient-table-wrap {
+	overflow-x: auto;
+}
+
+.patient-data-table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 0.94rem;
+}
+
+.patient-data-table th,
+.patient-data-table td {
+	text-align: left;
+	padding: 0.65rem 0.6rem;
+	border-bottom: 1px solid #e3ece9;
+	vertical-align: top;
+}
+
+.patient-data-table th {
+	color: var(--ink-muted);
+	font-weight: 600;
+	font-size: 0.82rem;
+	text-transform: uppercase;
+	letter-spacing: 0.03em;
+}
+
+.patient-badge {
+	display: inline-block;
+	padding: 0.2rem 0.6rem;
+	border-radius: 999px;
+	font-size: 0.78rem;
+	font-weight: 600;
+	white-space: nowrap;
+}
+
+.patient-badge-status-booked {
+	background: #fdf1dd;
+	color: #92600c;
+}
+
+.patient-badge-status-confirmed {
+	background: #e1f0fb;
+	color: #12557f;
+}
+
+.patient-badge-status-completed {
+	background: #e7f5ea;
+	color: #1e5c33;
+}
+
+.patient-badge-status-cancelled {
+	background: #fbe7e6;
+	color: #8a2f28;
+}
+
+.patient-btn-small {
+	min-height: 34px;
+	padding: 0.3rem 0.8rem;
+	font-size: 0.85rem;
+}
+
+.patient-btn-danger-outline {
+	border-color: #e0b3af;
+	color: #8a2f28;
+	background: #ffffff;
+}
+
+.patient-empty-note {
+	color: var(--ink-muted);
+	font-style: italic;
+	margin-bottom: 0;
+}
+
+@media (max-width: 900px) {
+	.patient-dashboard-grid {
+		grid-template-columns: 1fr;
+	}
+}

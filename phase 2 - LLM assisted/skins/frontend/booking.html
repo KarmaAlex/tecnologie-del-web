@@ -1,0 +1,111 @@
+<style><[PAGE_STYLES]></style>
+
+<section class="patient-page-head">
+	<div class="container">
+		<p class="eyebrow">Area Paziente</p>
+		<h1><[PAGE_HEADING]></h1>
+		<p class="lead"><[PAGE_LEAD]></p>
+	</div>
+</section>
+
+<section class="patient-dashboard-grid container">
+	<article class="patient-panel">
+		<h2>Prenota una visita</h2>
+
+		<[if!empty FORM_MESSAGE]>
+			<p class="<[FORM_MESSAGE_CLASS]>"><[FORM_MESSAGE]></p>
+		<[/if!empty]>
+
+		<[ifempty CAN_BOOK]>
+			<form class="patient-form-grid" method="post" action="book_appointment.php">
+				<input type="hidden" name="csrf_token" value="<[CSRF_TOKEN]>">
+				<input type="hidden" name="action" value="book">
+
+				<div class="patient-field-group">
+					<label for="schedule_id">Disponibilità</label>
+					<select id="schedule_id" name="schedule_id" required>
+						<option value="">Seleziona un orario disponibile</option>
+						<[foreach]>
+							<option value="<[SLOT_ID]>" <[SLOT_SELECTED]>><[SLOT_LABEL]></option>
+						<[/foreach]>
+					</select>
+					<p class="patient-field-hint">Medico, reparto e fascia oraria disponibile.</p>
+				</div>
+
+				<div class="patient-field-group">
+					<label for="reason">Motivo della visita</label>
+					<textarea id="reason" name="reason" required maxlength="500" placeholder="Es. controllo periodico, sintomi da riferire..."><[REASON_VALUE]></textarea>
+				</div>
+
+				<button type="submit" class="btn btn-primary">Conferma prenotazione</button>
+			</form>
+		<[/ifempty]>
+	</article>
+
+	<article class="patient-panel">
+		<h2>Le tue prenotazioni</h2>
+
+		<[ifempty HAS_APPOINTMENTS]>
+			<p class="patient-empty-note">Non hai ancora nessuna prenotazione.</p>
+		<[/ifempty]>
+
+		<[if!empty HAS_APPOINTMENTS]>
+			<div class="patient-table-wrap">
+				<table class="patient-data-table">
+					<thead>
+						<tr>
+							<th>Data e ora</th>
+							<th>Medico</th>
+							<th>Reparto</th>
+							<th>Stato</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<[foreach]>
+							<tr>
+								<td><[APPT_DATE]></td>
+								<td><[APPT_DOCTOR]></td>
+								<td><[APPT_DEPARTMENT]></td>
+								<td><span class="<[APPT_STATUS_CLASS]>"><[APPT_STATUS_LABEL]></span></td>
+								<td><[APPT_CANCEL_HTML]></td>
+							</tr>
+						<[/foreach]>
+					</tbody>
+				</table>
+			</div>
+		<[/if!empty]>
+	</article>
+</section>
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var prescriptionsUrl = 'view_prescriptions.php';
+		var prescriptionsLabel = 'Le tue prescrizioni';
+
+		var navRight = document.querySelector('.nav-right');
+		if (navRight && !navRight.querySelector('[data-nav-prescriptions]')) {
+			var navLink = document.createElement('a');
+			navLink.className = 'btn btn-outline';
+			navLink.href = prescriptionsUrl;
+			navLink.textContent = prescriptionsLabel;
+			navLink.setAttribute('data-nav-prescriptions', '1');
+
+			var primaryAction = navRight.querySelector('.btn-primary');
+			if (primaryAction) {
+				navRight.insertBefore(navLink, primaryAction);
+			} else {
+				navRight.appendChild(navLink);
+			}
+		}
+
+		var quickMenu = document.getElementById('quickMenu');
+		if (quickMenu && !quickMenu.querySelector('[data-nav-prescriptions]')) {
+			var mobileLink = document.createElement('a');
+			mobileLink.href = prescriptionsUrl;
+			mobileLink.textContent = prescriptionsLabel;
+			mobileLink.setAttribute('data-nav-prescriptions', '1');
+			quickMenu.insertBefore(mobileLink, quickMenu.firstChild);
+		}
+	});
+</script>

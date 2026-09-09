@@ -1,0 +1,56 @@
+<div class="bk-grid-2">
+	<section class="bk-panel">
+		<h2><[FORM_HEADING]></h2>
+		<form class="bk-form-grid" method="post" action="crud_departments.php">
+			<input type="hidden" name="csrf_token" value="<[CSRF_TOKEN]>">
+			<input type="hidden" name="action" value="<[FORM_ACTION]>">
+			<input type="hidden" name="department_id" value="<[FORM_DEPARTMENT_ID]>">
+
+			<div class="bk-field">
+				<label for="dept_name">Nome reparto</label>
+				<input type="text" id="dept_name" name="name" required maxlength="150" value="<[FORM_NAME]>">
+			</div>
+
+			<div class="bk-field">
+				<label for="dept_description">Descrizione</label>
+				<textarea id="dept_description" name="description" maxlength="1000"><[FORM_DESCRIPTION]></textarea>
+			</div>
+
+			<div style="display:flex; gap:0.6rem;">
+				<button type="submit" class="bk-btn bk-btn-primary"><[FORM_SUBMIT_LABEL]></button>
+				<[CANCEL_EDIT_HTML]>
+			</div>
+		</form>
+	</section>
+
+	<section class="bk-panel">
+		<h2>Reparti esistenti</h2>
+
+		<[ifempty HAS_DEPARTMENTS]>
+			<p class="bk-empty-note">Nessun reparto ancora censito.</p>
+		<[/ifempty]>
+
+		<[if!empty HAS_DEPARTMENTS]>
+			<div class="bk-table-wrap">
+				<table class="bk-table">
+					<thead>
+						<tr>
+							<th>Nome</th>
+							<th>Descrizione</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<[foreach]>
+							<tr>
+								<td><[DEPT_NAME]></td>
+								<td><[DEPT_DESCRIPTION]></td>
+								<td><[DEPT_ACTIONS_HTML]></td>
+							</tr>
+						<[/foreach]>
+					</tbody>
+				</table>
+			</div>
+		<[/if!empty]>
+	</section>
+</div>
