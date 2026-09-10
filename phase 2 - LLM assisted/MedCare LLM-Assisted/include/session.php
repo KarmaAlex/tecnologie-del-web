@@ -51,6 +51,20 @@ function bootstrapSession(): void
 
     session_start();
 
+    // Il template engine (template2.inc.php, Template::get()/close()) fa
+    // foreach($_SESSION['user'] as ...) senza controllare che la chiave
+    // esista: se un utente non loggato apre una pagina, PHP emette
+    // "Undefined array key" + "foreach() argument must be of type
+    // array|object, null given". Non possiamo modificare il motore
+    // (file pre-distribuito), quindi garantiamo qui che
+    // $_SESSION['user'] esista sempre come array — vuoto per un
+    // visitatore anonimo, popolato dopo login.php. isLoggedIn() resta
+    // corretta perché continua a controllare 'user_id', non la sola
+    // presenza dell'array.
+    if (!isset($_SESSION['user']) || !is_array($_SESSION['user'])) {
+        $_SESSION['user'] = [];
+    }
+
     // Rigenera periodicamente l'ID (mitiga session fixation su sessioni lunghe)
     if (!isset($_SESSION['_last_regeneration'])) {
         $_SESSION['_last_regeneration'] = time();

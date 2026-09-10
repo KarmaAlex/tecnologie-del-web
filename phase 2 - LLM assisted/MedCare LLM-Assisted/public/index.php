@@ -34,10 +34,12 @@ $tpl->setContent('csrf_token', htmlspecialchars(csrfToken(), ENT_QUOTES));
 if (isLoggedIn()) {
     $user = $_SESSION['user'];
 
+    $fullName = htmlspecialchars($user['name'] . ' ' . $user['surname'], ENT_QUOTES);
+    $groups = htmlspecialchars(implode(', ', $user['groups']), ENT_QUOTES);
+
     $tpl->setContent('is_logged_in', '1');
-    $tpl->setContent('user_fullname', htmlspecialchars($user['name'] . ' ' . $user['surname'], ENT_QUOTES));
-    $tpl->setContent('user_groups', htmlspecialchars(implode(', ', $user['groups']), ENT_QUOTES));
-    $tpl->setContent('csrf_field', csrfField());
+    $tpl->setContent('user_fullname', $fullName);
+    $tpl->setContent('user_groups', $groups);
 
     // Menu dinamico: una voce <li> per ogni service concesso ai gruppi
     // dell'utente. In questa fase i service non sono ancora implementati:
@@ -47,13 +49,18 @@ if (isLoggedIn()) {
         $safe = htmlspecialchars($serviceName, ENT_QUOTES);
         $menuItems .= "<li>{$safe}</li>\n";
     }
-    $tpl->setContent('granted_services_html', $menuItems !== '' ? $menuItems : '<li><em>Nessun service assegnato</em></li>');
+    $menuItems = $menuItems !== '' ? $menuItems : '<li><em>Nessun service assegnato</em></li>';
 
-    $tpl->setContent('body', '<section class="dashboard"><h1>Benvenuto, <[user_fullname]></h1>'
-        . '<p>Gruppi: <[user_groups]></p>'
-        . '<h2>Servizi disponibili</h2><ul><[granted_services_html]></ul>'
+    // IMPORTANTE: il valore passato a setContent() non deve contenere
+    // altri placeholder <[ ]> — Template::parse() fa una sola passata di
+    // sostituzione, quindi placeholder annidati nel valore di 'body' non
+    // vengono mai risolti e finiscono ripuliti dalla regex finale di
+    // get()/close(). Qui il markup va già completamente valorizzato.
+    $tpl->setContent('body', '<section class="dashboard"><h1>Benvenuto, ' . $fullName . '</h1>'
+        . '<p>Gruppi: ' . $groups . '</p>'
+        . '<h2>Servizi disponibili</h2><ul>' . $menuItems . '</ul>'
         . '<form method="post" action="/logout.php">'
-        . '<[csrf_field]>'
+        . csrfField()
         . '<button type="submit">Logout</button>'
         . '</form></section>');
 } else {
