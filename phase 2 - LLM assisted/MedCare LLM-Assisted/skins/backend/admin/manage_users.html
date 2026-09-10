@@ -1,0 +1,49 @@
+<section class="page-header">
+    <h1>Gestione utenti</h1>
+</section>
+
+<[feedback_html]>
+
+<section class="form-panel">
+    <h2>Nuovo utente</h2>
+    <form method="post" action="/services/admin/manage_users.php" class="form-vertical">
+        <[csrf_field]>
+        <input type="hidden" name="action" value="create">
+
+        <label for="username">Username</label>
+        <input type="text" name="username" id="username" maxlength="50" required>
+
+        <label for="email">Email</label>
+        <input type="email" name="email" id="email" maxlength="120" required>
+
+        <label for="first_name">Nome</label>
+        <input type="text" name="first_name" id="first_name" maxlength="80" required>
+
+        <label for="last_name">Cognome</label>
+        <input type="text" name="last_name" id="last_name" maxlength="80" required>
+
+        <label for="password">Password iniziale</label>
+        <input type="password" name="password" id="password" minlength="8" required>
+
+        <button type="submit">Crea utente</button>
+    </form>
+</section>
+
+<section class="table-panel">
+    <h2>Utenti registrati</h2>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Gruppi</th>
+                <th>Stato</th>
+                <th>Azione</th>
+            </tr>
+        </thead>
+        <tbody>
+            <[user_rows]>
+        </tbody>
+    </table>
+</section>

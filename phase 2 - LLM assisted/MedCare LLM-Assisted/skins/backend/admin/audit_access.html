@@ -1,0 +1,29 @@
+<section class="page-header">
+    <h1>Registro accessi</h1>
+</section>
+
+<section class="filter-bar">
+    <form method="get" action="/services/admin/audit_access.php">
+        <label for="action_filter">Filtra per azione</label>
+        <select name="action_filter" id="action_filter" onchange="this.form.submit()">
+            <[action_options]>
+        </select>
+    </form>
+</section>
+
+<section class="table-panel">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Data e ora</th>
+                <th>Utente</th>
+                <th>Servizio</th>
+                <th>Esito</th>
+                <th>IP</th>
+            </tr>
+        </thead>
+        <tbody>
+            <[audit_rows]>
+        </tbody>
+    </table>
+</section>

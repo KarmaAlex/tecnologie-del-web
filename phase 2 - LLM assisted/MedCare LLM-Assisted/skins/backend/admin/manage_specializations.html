@@ -1,0 +1,80 @@
+<section class="page-header">
+    <h1>Gestione specializzazioni</h1>
+</section>
+
+<[feedback_html]>
+
+<section class="form-panel">
+    <h2 id="form-title">Nuova specializzazione</h2>
+    <form method="post" action="/services/admin/manage_specializations.php" id="specialization-form" class="form-vertical">
+        <[csrf_field]>
+        <input type="hidden" name="action" id="form-action" value="create">
+        <input type="hidden" name="specialization_id" id="form-specialization-id" value="">
+
+        <label for="specialization_name">Nome specializzazione</label>
+        <input type="text" name="specialization_name" id="specialization_name" maxlength="100" required>
+
+        <label for="department_id">Dipartimento</label>
+        <select name="department_id" id="department_id" required>
+            <option value="">— Seleziona —</option>
+            <[department_options]>
+        </select>
+
+        <button type="submit" id="form-submit">Crea specializzazione</button>
+        <button type="button" id="form-cancel" style="display:none;">Annulla modifica</button>
+    </form>
+</section>
+
+<section class="table-panel">
+    <h2>Specializzazioni esistenti</h2>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Dipartimento</th>
+                <th>Modifica</th>
+                <th>Elimina</th>
+            </tr>
+        </thead>
+        <tbody>
+            <[specialization_rows]>
+        </tbody>
+    </table>
+</section>
+
+<script>
+// Popolamento campi gestito da MedCare.ui.initEditTriggers() in main.js.
+// Qui solo lo specifico di questa pagina: titolo/testo bottone e reset.
+(function () {
+    var form = document.getElementById('specialization-form');
+    if (!form) return;
+
+    var titleEl = document.getElementById('form-title');
+    var actionField = document.getElementById('form-action');
+    var idField = document.getElementById('form-specialization-id');
+    var nameField = document.getElementById('specialization_name');
+    var deptField = document.getElementById('department_id');
+    var submitBtn = document.getElementById('form-submit');
+    var cancelBtn = document.getElementById('form-cancel');
+
+    function resetForm() {
+        actionField.value = 'create';
+        idField.value = '';
+        nameField.value = '';
+        deptField.value = '';
+        titleEl.textContent = 'Nuova specializzazione';
+        submitBtn.textContent = 'Crea specializzazione';
+        cancelBtn.style.display = 'none';
+    }
+
+    form.addEventListener('medcare:formEditMode', function () {
+        actionField.value = 'update';
+        titleEl.textContent = 'Modifica specializzazione';
+        submitBtn.textContent = 'Salva modifiche';
+        cancelBtn.style.display = 'inline-block';
+        nameField.focus();
+    });
+
+    cancelBtn.addEventListener('click', resetForm);
+})();
+</script>

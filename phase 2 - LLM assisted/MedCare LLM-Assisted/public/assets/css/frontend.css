@@ -161,3 +161,16 @@ main, .vertical-main { max-width: 1100px; margin: var(--space-xl) auto; padding:
     color: var(--color-primary-contrast);
 }
 .inline-form button.danger { background: var(--color-error-fg); }
+
+/* ---------------------------------------------------------------
+   Profilo (dl a due colonne: etichetta + valore)
+   --------------------------------------------------------------- */
+
+.profile-details {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: var(--space-sm) var(--space-lg);
+    margin: 0;
+}
+.profile-details dt { font-weight: 600; color: var(--color-text-muted); }
+.profile-details dd { margin: 0; }

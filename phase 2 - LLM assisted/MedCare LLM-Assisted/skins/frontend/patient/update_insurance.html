@@ -1,0 +1,17 @@
+<section class="page-header">
+    <h1>Aggiorna assicurazione</h1>
+</section>
+
+<[feedback_html]>
+
+<form method="post" action="/services/patient/update_insurance.php" class="form-vertical">
+    <[csrf_field]>
+
+    <label for="insurance_provider">Compagnia assicurativa</label>
+    <input type="text" name="insurance_provider" id="insurance_provider" maxlength="120" value="<[insurance_provider_value]>">
+
+    <label for="insurance_number">Numero polizza</label>
+    <input type="text" name="insurance_number" id="insurance_number" maxlength="60" value="<[insurance_number_value]>">
+
+    <button type="submit">Salva modifiche</button>
+</form>
