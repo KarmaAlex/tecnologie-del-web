@@ -1,0 +1,38 @@
+<section class="page-header">
+    <h1>Storico paziente</h1>
+</section>
+
+<[error_html]>
+
+<section class="filter-bar">
+    <form method="get" action="/services/doctor/view_patient_history.php">
+        <label for="patient_id">Paziente</label>
+        <select name="patient_id" id="patient_id" onchange="this.form.submit()">
+            <[patient_options]>
+        </select>
+    </form>
+</section>
+
+<section class="patient-header">
+    <[patient_header_html]>
+</section>
+
+<section class="log-table-wrap">
+    <h3>Referti clinici</h3>
+    <table class="data-table">
+        <thead><tr><th>Data</th><th>Note</th></tr></thead>
+        <tbody>
+            <[log_rows]>
+        </tbody>
+    </table>
+</section>
+
+<section class="prescription-table-wrap">
+    <h3>Prescrizioni</h3>
+    <table class="data-table">
+        <thead><tr><th>Data</th><th>Farmaco</th><th>Dosaggio</th><th>Istruzioni</th></tr></thead>
+        <tbody>
+            <[prescription_rows]>
+        </tbody>
+    </table>
+</section>

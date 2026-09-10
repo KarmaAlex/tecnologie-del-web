@@ -1,0 +1,56 @@
+<section class="page-header">
+    <h1>Gestione turni</h1>
+</section>
+
+<[feedback_html]>
+
+<section class="form-panel">
+    <h2>Nuovo turno</h2>
+    <form method="post" action="/services/admin/manage_schedules.php" class="form-vertical">
+        <[csrf_field]>
+        <input type="hidden" name="action" value="create">
+
+        <label for="doctor_id">Medico</label>
+        <select name="doctor_id" id="doctor_id" required>
+            <[doctor_options]>
+        </select>
+
+        <label for="shift_date">Data</label>
+        <input type="date" name="shift_date" id="shift_date" required>
+
+        <label for="start_time">Inizio</label>
+        <input type="time" name="start_time" id="start_time" required>
+
+        <label for="end_time">Fine</label>
+        <input type="time" name="end_time" id="end_time" required>
+
+        <button type="submit">Aggiungi turno</button>
+    </form>
+</section>
+
+<section class="filter-bar">
+    <form method="get" action="/services/admin/manage_schedules.php">
+        <label for="department_id">Filtra per dipartimento</label>
+        <select name="department_id" id="department_id" onchange="this.form.submit()">
+            <[department_options]>
+        </select>
+    </form>
+</section>
+
+<section class="table-panel">
+    <h2>Turni programmati</h2>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Orario</th>
+                <th>Medico</th>
+                <th>Dipartimento</th>
+                <th>Azione</th>
+            </tr>
+        </thead>
+        <tbody>
+            <[shift_rows]>
+        </tbody>
+    </table>
+</section>

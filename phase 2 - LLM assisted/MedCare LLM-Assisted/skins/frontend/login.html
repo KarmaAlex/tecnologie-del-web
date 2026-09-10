@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accedi — MedCare Portal</title>
+    <meta name="csrf-token" content="<[csrf_token]>">
+    <link rel="stylesheet" href="/assets/css/frontend.css">
+</head>
+<body>
+    <header class="site-header">
+        <a href="/index.php" class="brand">MedCare Portal</a>
+    </header>
+
+    <main>
+        <section class="login-box">
+            <h1>Accedi</h1>
+
+            <[errors_html]>
+
+            <form method="post" action="/login.php" autocomplete="off">
+                <[csrf_field]>
+                <input type="hidden" name="redirect" value="<[redirect]>">
+
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" value="<[username_value]>" required autofocus>
+
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+
+                <button type="submit">Accedi</button>
+            </form>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>MedCare Portal — Progetto accademico, Fase 2 (LLM-Assisted).</p>
+    </footer>
+
+    <[style]>
+    <script src="/assets/js/main.js"></script>
+</body>
+</html>

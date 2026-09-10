@@ -1,0 +1,31 @@
+<section class="page-header">
+    <h1>Prenota una visita</h1>
+</section>
+
+<[feedback_html]>
+
+<section class="filter-bar">
+    <form method="get" action="/services/patient/book_appointment.php">
+        <label for="specialization_id">Specializzazione</label>
+        <select name="specialization_id" id="specialization_id" onchange="this.form.submit()">
+            <[specialization_options]>
+        </select>
+    </form>
+</section>
+
+<section class="slot-table-wrap">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Ora</th>
+                <th>Medico</th>
+                <th>Specializzazione</th>
+                <th>Azione</th>
+            </tr>
+        </thead>
+        <tbody>
+            <[slot_rows]>
+        </tbody>
+    </table>
+</section>

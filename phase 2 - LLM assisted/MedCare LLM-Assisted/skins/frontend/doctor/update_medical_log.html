@@ -1,0 +1,20 @@
+<section class="page-header">
+    <h1>Nuovo referto clinico</h1>
+</section>
+
+<[feedback_html]>
+
+<form method="post" action="/services/doctor/update_medical_log.php" class="form-vertical">
+    <[csrf_field]>
+
+    <label for="patient_id">Paziente</label>
+    <select name="patient_id" id="patient_id" required>
+        <[patient_options]>
+    </select>
+
+    <label for="notes">Referto</label>
+    <textarea name="notes" id="notes" rows="8" maxlength="4000" required
+        placeholder="Descrivi l'esito della visita, sintomi rilevati, indicazioni..."></textarea>
+
+    <button type="submit">Salva referto</button>
+</form>

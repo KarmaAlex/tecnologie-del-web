@@ -1,0 +1,38 @@
+# Credenziali e configurazione locale — MAI committare
+.env
+.env.local
+.env.*.local
+
+# Cache generata a runtime dal template engine (Class Cache in
+# include/template2.inc.php scrive qui se ->caching(true) viene
+# abilitato in futuro; vuota di default in questo progetto)
+/cache/*
+!/cache/.gitkeep
+
+# Dipendenze (nessuna prevista dal vincolo "framework prohibition"
+# dell'AGENTS.md, ma per sicurezza se in futuro si introducesse
+# composer per soli dev-tool come PHPUnit/PHPStan)
+/vendor/
+composer.lock
+
+# IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Log applicativi locali (error_log di PHP, se configurato su file)
+*.log
+/logs/*
+!/logs/.gitkeep
+
+# Backup/temp editor
+*~
+*.swp
+*.swo
+*.bak

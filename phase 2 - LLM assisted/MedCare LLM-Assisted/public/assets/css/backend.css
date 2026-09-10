@@ -1,0 +1,161 @@
+/* public/assets/css/backend.css
+ *
+ * Design system dell'area BACKEND: verticali admin
+ * (public/services/admin/*). Stessa palette, stessi token, stessi
+ * badge di frontend.css — un utente "Attivo" o uno slot "Prenotato"
+ * devono avere lo stesso colore qui e lì. Cambia solo la densità: qui
+ * l'utente è staff clinico che lavora su tabelle ampie tutto il giorno,
+ * non un paziente occasionale, quindi meno spaziatura, più righe
+ * visibili, header più compatto.
+ */
+
+@import url("tokens.css");
+
+* { box-sizing: border-box; }
+
+body {
+    font-family: var(--font-family);
+    margin: 0;
+    color: var(--color-text);
+    background: var(--color-bg);
+    font-size: 0.95rem;
+}
+
+/* ---------------------------------------------------------------
+   Header / Footer — versione compatta rispetto al frontend
+   --------------------------------------------------------------- */
+
+.site-header, .site-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-sm) var(--space-lg);
+    background: var(--color-primary-dark);
+    color: var(--color-primary-contrast);
+}
+
+.site-footer {
+    background: var(--color-neutral-bg);
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+    padding: var(--space-sm) var(--space-lg);
+}
+
+.brand { color: var(--color-primary-contrast); text-decoration: none; font-weight: 700; }
+
+.topnav { display: flex; align-items: center; gap: var(--space-md); }
+.topnav a { color: var(--color-primary-contrast); }
+.topnav-user small { opacity: 0.75; }
+
+.link-button {
+    background: none;
+    border: none;
+    color: var(--color-primary-contrast);
+    text-decoration: underline;
+    cursor: pointer;
+    font: inherit;
+}
+
+.vertical-main { max-width: 1280px; margin: var(--space-lg) auto; padding: 0 var(--space-md); }
+
+.page-header h1 { margin-bottom: var(--space-md); font-size: 1.4rem; }
+
+/* ---------------------------------------------------------------
+   Pannelli (form CRUD, tabelle, filtri) — meno padding del frontend
+   --------------------------------------------------------------- */
+
+.form-panel, .table-panel, .patient-header, .filter-bar {
+    background: var(--color-surface);
+    padding: var(--space-md) var(--space-lg);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-card);
+    margin-bottom: var(--space-md);
+    border: 1px solid var(--color-border);
+}
+
+.form-panel h2, .table-panel h2 { margin-top: 0; font-size: 1.1rem; }
+
+.filter-bar { display: flex; align-items: center; gap: var(--space-sm); padding: var(--space-sm) var(--space-lg); }
+.filter-bar label { font-weight: 600; margin-right: var(--space-xs); }
+.filter-bar select { padding: 0.35rem; border-radius: var(--radius-sm); border: 1px solid var(--color-border); }
+
+/* ---------------------------------------------------------------
+   Form
+   --------------------------------------------------------------- */
+
+.form-vertical label { display: block; margin-top: var(--space-sm); font-weight: 600; font-size: 0.88rem; }
+.form-vertical input,
+.form-vertical select,
+.form-vertical textarea {
+    width: 100%;
+    padding: 0.4rem var(--space-sm);
+    margin-top: 0.2rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: 0.92rem;
+}
+.form-vertical button {
+    margin-top: var(--space-md);
+    padding: 0.45rem 1rem;
+    background: var(--color-primary);
+    color: var(--color-primary-contrast);
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+.form-vertical button#form-cancel { background: var(--color-text-muted); margin-left: var(--space-sm); }
+
+/* ---------------------------------------------------------------
+   Feedback
+   --------------------------------------------------------------- */
+
+.feedback {
+    padding: 0.5rem var(--space-md);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-md);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+.feedback-success { background: var(--color-success-bg); color: var(--color-success-fg); border: 1px solid var(--color-success-border); }
+.feedback-error   { background: var(--color-error-bg);   color: var(--color-error-fg);   border: 1px solid var(--color-error-border); }
+.feedback-info    { background: var(--color-info-bg);    color: var(--color-info-fg);    border: 1px solid var(--color-info-border); }
+
+/* ---------------------------------------------------------------
+   Tabelle dati — più dense (meno padding verticale) del frontend,
+   pensate per elenchi lunghi (turni, utenti, audit log)
+   --------------------------------------------------------------- */
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--color-surface);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+    font-size: 0.9rem;
+}
+.data-table th, .data-table td {
+    text-align: left;
+    padding: 0.45rem var(--space-sm);
+    border-bottom: 1px solid var(--color-border);
+}
+.data-table th { background: var(--color-neutral-bg); font-weight: 700; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.02em; }
+.data-table tr:hover td { background: var(--color-bg); }
+.data-table tr:last-child td { border-bottom: none; }
+.muted { color: var(--color-text-muted); }
+
+.inline-form { display: inline; }
+.inline-form button {
+    padding: 0.3rem 0.7rem;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    background: var(--color-primary);
+    color: var(--color-primary-contrast);
+    font-size: 0.85rem;
+}
+.inline-form button.danger { background: var(--color-error-fg); }
+
+.edit-trigger { background: var(--color-neutral-bg) !important; color: var(--color-text) !important; }

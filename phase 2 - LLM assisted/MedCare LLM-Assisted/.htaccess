@@ -1,0 +1,27 @@
+# /.htaccess (project root)
+#
+# Fallback difensivo: il DocumentRoot di Apache DEVE puntare a public/,
+# come previsto dal blueprint (AGENTS.md, sezione 5). Questo file esiste
+# solo per il caso in cui, per errore di configurazione locale (es. XAMPP
+# con VirtualHost non ancora impostato), qualcuno avvii il progetto con
+# DocumentRoot sulla project root: in quel caso, nega tutto tranne
+# l'accesso a public/ e nega sempre i file sensibili.
+#
+# Non sostituisce una configurazione corretta del vhost — è una rete di
+# sicurezza in più.
+
+RewriteEngine On
+
+# File sempre vietati, ovunque si trovino
+<FilesMatch "(\.env|\.env\..*|\.git.*|composer\.(json|lock)|template2\.inc\.php)$">
+    Require all denied
+</FilesMatch>
+
+# Nega esplicitamente le cartelle interne se qualcuno le richiede
+# direttamente con DocumentRoot sulla project root
+RewriteRule ^(config|include|skins|database|cache)(/.*)?$ - [F,L]
+
+# Tutto il resto che non è sotto public/ non deve essere raggiungibile:
+# se il vhost è configurato correttamente questo file non viene nemmeno
+# letto (Apache legge l'.htaccess del DocumentRoot, cioè public/.htaccess).
+Options -Indexes

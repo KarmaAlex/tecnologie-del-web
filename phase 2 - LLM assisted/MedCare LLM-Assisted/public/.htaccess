@@ -1,0 +1,52 @@
+# public/.htaccess
+#
+# Configurazione Apache per il document root del progetto (public/).
+# L'AGENTS.md impone che public/ sia l'unica cartella esposta: skins/,
+# include/, config/, database/ e .env devono restare irraggiungibili
+# via HTTP anche se qualcuno punta il vhost alla project root per errore
+# di configurazione — questo file è la seconda linea di difesa (la prima
+# è semplicemente puntare DocumentRoot a public/).
+
+# ---------------------------------------------------------------------
+# Disabilita il listing delle directory
+# ---------------------------------------------------------------------
+Options -Indexes
+
+# ---------------------------------------------------------------------
+# Blocca l'accesso diretto a file sensibili ovunque compaiano sotto
+# public/ (per errore di deploy, backup dimenticati, ecc.)
+# ---------------------------------------------------------------------
+<FilesMatch "(\.env|\.env\..*|\.git.*|composer\.(json|lock)|\.sql|\.md)$">
+    Require all denied
+</FilesMatch>
+
+# ---------------------------------------------------------------------
+# Se il vhost punta erroneamente alla project root invece di public/,
+# queste regole impediscono comunque l'accesso diretto alle cartelle
+# riservate (difesa in profondità, non sostituisce un DocumentRoot
+# configurato correttamente).
+# ---------------------------------------------------------------------
+RewriteEngine On
+RewriteRule ^skins/ - [F,L]
+RewriteRule ^include/ - [F,L]
+RewriteRule ^config/ - [F,L]
+RewriteRule ^database/ - [F,L]
+RewriteRule ^cache/ - [F,L]
+
+# ---------------------------------------------------------------------
+# Header di sicurezza di base
+# ---------------------------------------------------------------------
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# ---------------------------------------------------------------------
+# PHP: nasconde la versione nell'header Server (se mod_php attivo e
+# consentito da php.ini — expose_php va comunque impostato a Off lì)
+# ---------------------------------------------------------------------
+<IfModule mod_php.c>
+    php_flag display_errors Off
+    php_flag log_errors On
+</IfModule>

@@ -1,0 +1,83 @@
+<section class="page-header">
+    <h1>Gestione dipartimenti</h1>
+</section>
+
+<[feedback_html]>
+
+<section class="form-panel">
+    <h2 id="form-title">Nuovo dipartimento</h2>
+    <form method="post" action="/services/admin/crud_departments.php" id="department-form" class="form-vertical">
+        <[csrf_field]>
+        <input type="hidden" name="action" id="form-action" value="create">
+        <input type="hidden" name="department_id" id="form-department-id" value="">
+
+        <label for="department_name">Nome dipartimento</label>
+        <input type="text" name="department_name" id="department_name" maxlength="100" required>
+
+        <label for="description">Descrizione</label>
+        <textarea name="description" id="description" rows="3"></textarea>
+
+        <button type="submit" id="form-submit">Crea dipartimento</button>
+        <button type="button" id="form-cancel" style="display:none;">Annulla modifica</button>
+    </form>
+</section>
+
+<section class="table-panel">
+    <h2>Dipartimenti esistenti</h2>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Descrizione</th>
+                <th>Modifica</th>
+                <th>Elimina</th>
+            </tr>
+        </thead>
+        <tbody>
+            <[department_rows]>
+        </tbody>
+    </table>
+</section>
+
+<script>
+// Il popolamento dei campi (action/department_id/nome/descrizione) è
+// gestito da MedCare.ui.initEditTriggers() in main.js, guidato dagli
+// attributi data-edit-target/data-edit-values emessi da
+// crud_departments.php sulle righe della tabella.
+//
+// Qui resta SOLO ciò che è specifico di questa pagina: cambiare
+// titolo/testo del bottone e mostrare "Annulla modifica" quando si
+// entra in edit mode, e resettare il form quando si annulla.
+(function () {
+    var form = document.getElementById('department-form');
+    if (!form) return;
+
+    var titleEl = document.getElementById('form-title');
+    var actionField = document.getElementById('form-action');
+    var idField = document.getElementById('form-department-id');
+    var nameField = document.getElementById('department_name');
+    var descField = document.getElementById('description');
+    var submitBtn = document.getElementById('form-submit');
+    var cancelBtn = document.getElementById('form-cancel');
+
+    function resetForm() {
+        actionField.value = 'create';
+        idField.value = '';
+        nameField.value = '';
+        descField.value = '';
+        titleEl.textContent = 'Nuovo dipartimento';
+        submitBtn.textContent = 'Crea dipartimento';
+        cancelBtn.style.display = 'none';
+    }
+
+    form.addEventListener('medcare:formEditMode', function () {
+        actionField.value = 'update';
+        titleEl.textContent = 'Modifica dipartimento';
+        submitBtn.textContent = 'Salva modifiche';
+        cancelBtn.style.display = 'inline-block';
+        nameField.focus();
+    });
+
+    cancelBtn.addEventListener('click', resetForm);
+})();
+</script>

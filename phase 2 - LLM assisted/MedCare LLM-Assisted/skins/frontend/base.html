@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><[page_title]> — MedCare Portal</title>
+    <meta name="csrf-token" content="<[csrf_token]>">
+    <link rel="stylesheet" href="/assets/css/frontend.css">
+</head>
+<body>
+    <header class="site-header">
+        <a href="/index.php" class="brand">MedCare Portal</a>
+        <[if!empty is_logged_in]>
+        <nav class="topnav">
+            <span class="topnav-user"><[user_fullname]></span>
+        </nav>
+        <[/if!empty]>
+        <[ifempty is_logged_in]>
+        <nav class="topnav">
+            <a href="/login.php">Accedi</a>
+        </nav>
+        <[/ifempty]>
+    </header>
+
+    <main>
+        <[body]>
+    </main>
+
+    <footer class="site-footer">
+        <p>MedCare Portal — Progetto accademico, Fase 2 (LLM-Assisted).</p>
+    </footer>
+
+    <[style]>
+    <script src="/assets/js/main.js"></script>
+</body>
+</html>
