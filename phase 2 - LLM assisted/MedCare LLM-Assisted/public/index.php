@@ -3,18 +3,14 @@
  * public/index.php
  *
  * Context router / landing controller (AGENTS.md target directory
- * blueprint). In questa fase non esistono ancora service concreti sotto
- * public/services/*, quindi il router si limita a:
- *   - mostrare una landing pubblica se non loggati
- *   - mostrare una dashboard minimale (nome utente + gruppi + menu dei
- *     service concessi) se loggati
- *
- * Ogni futuro service in public/services/{patient,doctor,admin}/*.php
- * aprirà con lo stesso identico preambolo:
- *
- *   require_once __DIR__ . '/../../../include/auth.php';
- *   require_once __DIR__ . '/../../../include/template2.inc.php';
- *   requireService('nome_service_registrato_in_db');
+ * blueprint):
+ *   - mostra una landing pubblica se non loggati
+ *   - mostra una dashboard con nome utente, gruppi e menu dei service
+ *     concessi se loggati. Ogni service con un controller già
+ *     implementato compare come link cliccabile verso
+ *     /services/{ruolo}/{nome}.php; i service registrati in
+ *     schema.sql ma non ancora scritti compaiono come testo
+ *     disabilitato, per non proporre link 404.
  */
 
 declare(strict_types=1);
@@ -41,13 +37,23 @@ if (isLoggedIn()) {
     $tpl->setContent('user_fullname', $fullName);
     $tpl->setContent('user_groups', $groups);
 
-    // Menu dinamico: una voce <li> per ogni service concesso ai gruppi
-    // dell'utente. In questa fase i service non sono ancora implementati:
-    // il menu elenca solo i nomi registrati, senza link funzionanti.
+    // Menu dinamico: una voce per ogni service concesso ai gruppi
+    // dell'utente. Se il controller esiste davvero sotto public/, è un
+    // link cliccabile; altrimenti (service registrato in schema.sql ma
+    // non ancora implementato) resta testo disabilitato, per non
+    // proporre link che risponderebbero 404.
     $menuItems = '';
-    foreach ($user['granted_services'] as $serviceName) {
-        $safe = htmlspecialchars($serviceName, ENT_QUOTES);
-        $menuItems .= "<li>{$safe}</li>\n";
+    foreach ($user['granted_services'] as $service) {
+        $name = htmlspecialchars($service['service_name'], ENT_QUOTES);
+        $path = $service['execution_path'];
+        $controllerExists = is_file(dirname(__DIR__) . '/public/' . $path);
+
+        if ($controllerExists) {
+            $href = htmlspecialchars('/' . $path, ENT_QUOTES);
+            $menuItems .= '<li><a href="' . $href . '">' . $name . '</a></li>' . "\n";
+        } else {
+            $menuItems .= '<li><span class="muted">' . $name . ' (non ancora disponibile)</span></li>' . "\n";
+        }
     }
     $menuItems = $menuItems !== '' ? $menuItems : '<li><em>Nessun service assegnato</em></li>';
 

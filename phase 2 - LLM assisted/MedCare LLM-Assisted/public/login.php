@@ -73,18 +73,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $groupIds = array_map(static fn($g) => (int)$g['group_id'], $groupRows);
             $groupNames = array_map(static fn($g) => $g['group_name'], $groupRows);
 
-            // Risolve i service_name concessi a quei gruppi (per gli skin/menu)
-            $serviceNames = [];
+            // Risolve i service_name (+ execution_path, per costruire i
+            // link nel menu) concessi a quei gruppi.
+            $grantedServices = [];
             if (!empty($groupIds)) {
                 $placeholders = implode(',', array_fill(0, count($groupIds), '?'));
                 $svcStmt = $pdo->prepare(
-                    "SELECT DISTINCT s.service_name
+                    "SELECT DISTINCT s.service_name, s.execution_path
                      FROM services s
                      JOIN services_has_groups shg ON shg.service_id = s.service_id
-                     WHERE shg.group_id IN ({$placeholders})"
+                     WHERE shg.group_id IN ({$placeholders})
+                     ORDER BY s.service_name"
                 );
                 $svcStmt->execute($groupIds);
-                $serviceNames = array_column($svcStmt->fetchAll(), 'service_name');
+                $grantedServices = $svcStmt->fetchAll();
             }
 
             $_SESSION['user'] = [
@@ -95,8 +97,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'email'            => $row['email'],
                 'groups'           => $groupNames,
                 'group_ids'        => $groupIds,
-                'granted_services' => $serviceNames, // nomi logici, per la UI
-                'services'         => [],            // popolato da requireService() per-script
+                'granted_services' => $grantedServices, // [['service_name'=>..., 'execution_path'=>...], ...]
+                'services'         => [],               // popolato da requireService() per-script
             ];
 
             logAudit((int)$row['user_id'], 'login', 'LOGIN_OK');
