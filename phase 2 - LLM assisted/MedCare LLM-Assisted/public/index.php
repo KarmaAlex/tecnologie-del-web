@@ -18,6 +18,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../include/session.php';
 require_once __DIR__ . '/../include/auth.php';
 require_once __DIR__ . '/../include/template2.inc.php';
+require_once __DIR__ . '/../include/labels.php';
 
 bootstrapSession();
 loadAuth();
@@ -31,7 +32,8 @@ if (isLoggedIn()) {
     $user = $_SESSION['user'];
 
     $fullName = htmlspecialchars($user['name'] . ' ' . $user['surname'], ENT_QUOTES);
-    $groups = htmlspecialchars(implode(', ', $user['groups']), ENT_QUOTES);
+    $groupLabels = array_map('groupLabel', $user['groups']);
+    $groups = htmlspecialchars(implode(', ', $groupLabels), ENT_QUOTES);
 
     $tpl->setContent('is_logged_in', '1');
     $tpl->setContent('user_fullname', $fullName);
@@ -41,18 +43,20 @@ if (isLoggedIn()) {
     // dell'utente. Se il controller esiste davvero sotto public/, è un
     // link cliccabile; altrimenti (service registrato in schema.sql ma
     // non ancora implementato) resta testo disabilitato, per non
-    // proporre link che risponderebbero 404.
+    // proporre link che risponderebbero 404. Il nome mostrato è
+    // l'etichetta leggibile da serviceLabel(), non il service_name
+    // grezzo del database.
     $menuItems = '';
     foreach ($user['granted_services'] as $service) {
-        $name = htmlspecialchars($service['service_name'], ENT_QUOTES);
+        $label = htmlspecialchars(serviceLabel($service['service_name']), ENT_QUOTES);
         $path = $service['execution_path'];
         $controllerExists = is_file(dirname(__DIR__) . '/public/' . $path);
 
         if ($controllerExists) {
             $href = htmlspecialchars('/' . $path, ENT_QUOTES);
-            $menuItems .= '<li><a href="' . $href . '">' . $name . '</a></li>' . "\n";
+            $menuItems .= '<li><a href="' . $href . '">' . $label . '</a></li>' . "\n";
         } else {
-            $menuItems .= '<li><span class="muted">' . $name . ' (non ancora disponibile)</span></li>' . "\n";
+            $menuItems .= '<li><span class="muted">' . $label . ' (non ancora disponibile)</span></li>' . "\n";
         }
     }
     $menuItems = $menuItems !== '' ? $menuItems : '<li><em>Nessun service assegnato</em></li>';

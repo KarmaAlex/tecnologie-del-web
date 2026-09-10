@@ -1,0 +1,38 @@
+<section class="page-header">
+    <h1>Gestione slot</h1>
+</section>
+
+<[feedback_html]>
+
+<section class="form-panel">
+    <h2>Apri nuovo slot</h2>
+    <form method="post" action="/services/doctor/manage_slots.php" class="form-vertical">
+        <[csrf_field]>
+        <input type="hidden" name="action" value="create">
+
+        <label for="slot_date">Data</label>
+        <input type="date" name="slot_date" id="slot_date" required>
+
+        <label for="slot_time">Ora</label>
+        <input type="time" name="slot_time" id="slot_time" required>
+
+        <button type="submit">Apri slot</button>
+    </form>
+</section>
+
+<section class="table-panel">
+    <h2>I miei slot</h2>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Data e ora</th>
+                <th>Stato</th>
+                <th>Paziente</th>
+                <th>Azione</th>
+            </tr>
+        </thead>
+        <tbody>
+            <[slot_rows]>
+        </tbody>
+    </table>
+</section>

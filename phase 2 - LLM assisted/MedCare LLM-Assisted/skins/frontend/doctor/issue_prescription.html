@@ -1,0 +1,26 @@
+<section class="page-header">
+    <h1>Nuova prescrizione</h1>
+</section>
+
+<[feedback_html]>
+
+<form method="post" action="/services/doctor/issue_prescription.php" class="form-vertical">
+    <[csrf_field]>
+
+    <label for="patient_id">Paziente</label>
+    <select name="patient_id" id="patient_id" required>
+        <[patient_options]>
+    </select>
+
+    <label for="medication">Farmaco</label>
+    <input type="text" name="medication" id="medication" maxlength="150" required>
+
+    <label for="dosage">Dosaggio</label>
+    <input type="text" name="dosage" id="dosage" maxlength="100" required placeholder="es. 5 mg, una compressa al giorno">
+
+    <label for="instructions">Istruzioni (opzionale)</label>
+    <textarea name="instructions" id="instructions" rows="4" maxlength="255"
+        placeholder="Modalità di assunzione, avvertenze..."></textarea>
+
+    <button type="submit">Emetti prescrizione</button>
+</form>

@@ -19,12 +19,15 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/labels.php';
+
 function renderHeader(string $pageTitle, string $area = 'frontend'): void
 {
     $user = $_SESSION['user'] ?? null;
     $title = htmlspecialchars($pageTitle, ENT_QUOTES);
     $fullName = $user ? htmlspecialchars($user['name'] . ' ' . $user['surname'], ENT_QUOTES) : '';
-    $groups = $user ? htmlspecialchars(implode(', ', $user['groups']), ENT_QUOTES) : '';
+    $groupLabels = $user ? array_map('groupLabel', $user['groups']) : [];
+    $groups = htmlspecialchars(implode(', ', $groupLabels), ENT_QUOTES);
     $formCsrf = csrfField();
     $csrfMeta = htmlspecialchars(csrfToken(), ENT_QUOTES);
 

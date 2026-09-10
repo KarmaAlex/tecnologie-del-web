@@ -1,0 +1,31 @@
+<section class="page-header">
+    <h1>I miei appuntamenti</h1>
+</section>
+
+<[error_html]>
+
+<section class="filter-bar">
+    <form method="get" action="/services/doctor/view_appointments.php">
+        <label for="scope">Mostra</label>
+        <select name="scope" id="scope" onchange="this.form.submit()">
+            <option value="upcoming"<[scope_upcoming_selected]>>Prossimi</option>
+            <option value="all"<[scope_all_selected]>>Tutti</option>
+        </select>
+    </form>
+</section>
+
+<section class="table-panel">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Ora</th>
+                <th>Paziente</th>
+                <th>Stato</th>
+            </tr>
+        </thead>
+        <tbody>
+            <[appointment_rows]>
+        </tbody>
+    </table>
+</section>

@@ -1,0 +1,40 @@
+<section class="page-header">
+    <h1>I miei turni</h1>
+</section>
+
+<[feedback_html]>
+
+<section class="form-panel">
+    <h2>Nuovo turno</h2>
+    <form method="post" action="/services/doctor/update_shift.php" class="form-vertical">
+        <[csrf_field]>
+        <input type="hidden" name="action" value="create">
+
+        <label for="shift_date">Data</label>
+        <input type="date" name="shift_date" id="shift_date" required>
+
+        <label for="start_time">Inizio</label>
+        <input type="time" name="start_time" id="start_time" required>
+
+        <label for="end_time">Fine</label>
+        <input type="time" name="end_time" id="end_time" required>
+
+        <button type="submit">Aggiungi turno</button>
+    </form>
+</section>
+
+<section class="table-panel">
+    <h2>Turni programmati</h2>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Orario</th>
+                <th>Azione</th>
+            </tr>
+        </thead>
+        <tbody>
+            <[shift_rows]>
+        </tbody>
+    </table>
+</section>
