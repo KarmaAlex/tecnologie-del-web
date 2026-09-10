@@ -32,27 +32,27 @@ if (ini_get('session.use_cookies')) {
 session_destroy();
 
 $logout = new Template(__DIR__ . '/../skins/frontend/logout');
-$logout->setContent('LOGOUT_TITLE', 'Signed Out Successfully');
+$logout->setContent('LOGOUT_TITLE', 'Log out avvenuto con successo');
 $logout->setContent(
 	'LOGOUT_MESSAGE',
 	$wasLoggedIn
-		? 'The session for ' . esc($displayName) . ' has been closed securely.'
-		: 'No active session was detected, but you can continue to the homepage.'
+		? 'La sessione di ' . esc($displayName) . ' è stata terminate.'
+		: 'Nessuna sessiona attiva, verrai rediretto alla home page.'
 );
 $logout->setContent('PRIMARY_URL', 'index.php');
-$logout->setContent('PRIMARY_TEXT', 'Return to Homepage');
+$logout->setContent('PRIMARY_TEXT', 'Torna alla home');
 $logout->setContent('SECONDARY_URL', 'login.php');
-$logout->setContent('SECONDARY_TEXT', 'Sign In Again');
+$logout->setContent('SECONDARY_TEXT', 'Accedi nuovamente');
 
 $contentHtml = $logout->get();
 
 $base = new Template(__DIR__ . '/../skins/frontend/base');
-$base->setContent('PAGE_TITLE', 'MedCare Portal - Signed Out');
-$base->setContent('META_DESCRIPTION', 'You have signed out from MedCare Portal.');
+$base->setContent('PAGE_TITLE', 'MedCare Portal - Logout');
+$base->setContent('META_DESCRIPTION', 'Sei uscito dal portale MedCare.');
 $base->setContent('BRAND_NAME', 'MedCare Portal');
-$base->setContent('NAV_WELCOME', 'Session closed');
+$base->setContent('NAV_WELCOME', 'Sessione terminata');
 $base->setContent('NAV_ACTION_URL', 'login.php');
-$base->setContent('NAV_ACTION_TEXT', 'Sign In');
+$base->setContent('NAV_ACTION_TEXT', 'Accedi');
 $base->setContent('PAGE_CONTENT', $contentHtml);
 $base->setContent('CURRENT_YEAR', date('Y'));
 

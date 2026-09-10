@@ -156,27 +156,3 @@ CREATE TABLE `prescription_items` (
 	PRIMARY KEY (`id`),
 	CONSTRAINT `pi_pres_fk` FOREIGN KEY (`prescription_id`) REFERENCES `prescriptions`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
-
--- Optional, maybe add later
-
---CREATE TABLE `audit_logs` (
---	`id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
---	`user_id` INT UNSIGNED DEFAULT NULL,
---	`action` VARCHAR(150) NOT NULL,
---	`target` VARCHAR(255) DEFAULT NULL,
---	`ip_address` VARCHAR(45) DEFAULT NULL,
---	`metadata` JSON DEFAULT NULL,
---	`created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
---	PRIMARY KEY (`id`),
---	CONSTRAINT `audit_user_fk` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE SET NULL ON UPDATE CASCADE
---);
-
--- Optional session store for extended session management
---CREATE TABLE `user_sessions` (
---	`id` CHAR(128) NOT NULL,
---	`user_id` INT UNSIGNED NOT NULL,
---	`data` TEXT DEFAULT NULL,
---	`last_activity` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
---	PRIMARY KEY (`id`),
---	CONSTRAINT `us_user_fk` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
---);

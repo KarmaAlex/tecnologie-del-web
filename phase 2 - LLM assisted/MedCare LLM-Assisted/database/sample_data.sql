@@ -13,7 +13,7 @@
 -- accetta entrambi, sono lo stesso algoritmo bcrypt).
 -- =====================================================================
 
-USE medcare_portal;
+USE medcare_portal_llm;
 
 SET FOREIGN_KEY_CHECKS = 0;
 

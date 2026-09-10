@@ -26,12 +26,14 @@ Options -Indexes
 # riservate (difesa in profondità, non sostituisce un DocumentRoot
 # configurato correttamente).
 # ---------------------------------------------------------------------
-RewriteEngine On
-RewriteRule ^skins/ - [F,L]
-RewriteRule ^include/ - [F,L]
-RewriteRule ^config/ - [F,L]
-RewriteRule ^database/ - [F,L]
-RewriteRule ^cache/ - [F,L]
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^skins/ - [F,L]
+    RewriteRule ^include/ - [F,L]
+    RewriteRule ^config/ - [F,L]
+    RewriteRule ^database/ - [F,L]
+    RewriteRule ^cache/ - [F,L]
+</IfModule>
 
 # ---------------------------------------------------------------------
 # Header di sicurezza di base
@@ -47,6 +49,6 @@ RewriteRule ^cache/ - [F,L]
 # consentito da php.ini — expose_php va comunque impostato a Off lì)
 # ---------------------------------------------------------------------
 <IfModule mod_php.c>
-    php_flag display_errors Off
+    php_flag display_errors On
     php_flag log_errors On
 </IfModule>

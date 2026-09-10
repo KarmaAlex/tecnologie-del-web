@@ -10,7 +10,14 @@
 # Non sostituisce una configurazione corretta del vhost — è una rete di
 # sicurezza in più.
 
-RewriteEngine On
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^skins/ - [F,L]
+    RewriteRule ^include/ - [F,L]
+    RewriteRule ^config/ - [F,L]
+    RewriteRule ^database/ - [F,L]
+    RewriteRule ^cache/ - [F,L]
+</IfModule>
 
 # File sempre vietati, ovunque si trovino
 <FilesMatch "(\.env|\.env\..*|\.git.*|composer\.(json|lock)|template2\.inc\.php)$">
@@ -19,9 +26,10 @@ RewriteEngine On
 
 # Nega esplicitamente le cartelle interne se qualcuno le richiede
 # direttamente con DocumentRoot sulla project root
-RewriteRule ^(config|include|skins|database|cache)(/.*)?$ - [F,L]
+<IfModule mod_rewrite.c>
+    RewriteRule ^(config|include|skins|database|cache)(/.*)?$ - [F,L]
+</IfModule>
 
 # Tutto il resto che non è sotto public/ non deve essere raggiungibile:
 # se il vhost è configurato correttamente questo file non viene nemmeno
 # letto (Apache legge l'.htaccess del DocumentRoot, cioè public/.htaccess).
-Options -Indexes

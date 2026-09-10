@@ -94,19 +94,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$password = (string)($_POST['password'] ?? '');
 
 	if ($identity === '' || $password === '') {
-		$errorMessage = 'Please provide both username or email and password.';
+		$errorMessage = 'Inserisci username e password.';
 	} else {
 		try {
 			$pdo = getPDO();
 			$user = fetchUserByIdentity($pdo, $identity);
 
 			if ($user === null || (int)$user['active'] !== 1) {
-				$errorMessage = 'Invalid credentials.';
+				$errorMessage = 'Credenziali non valide.';
 			} else {
 				$storedHash = (string)$user['password_hash'];
 
 				if (!verifyPassword($password, $storedHash)) {
-					$errorMessage = 'Invalid credentials.';
+					$errorMessage = 'Credenziali non valide.';
 				} else {
 					$userId = (int)$user['id'];
 					$groups = fetchUserGroups($pdo, $userId);
@@ -132,31 +132,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			}
 		} catch (Throwable $e) {
 			error_log('Login error: ' . $e->getMessage());
-			$errorMessage = 'Login is temporarily unavailable. Please try again later.';
+			$errorMessage = 'Login non disponibile. Riprova piu tardi.';
 		}
 	}
 }
 
 $login = new Template(__DIR__ . '/../skins/frontend/login');
-$login->setContent('FORM_TITLE', 'Sign In');
-$login->setContent('FORM_LEAD', 'Access your MedCare Portal area with your professional or patient credentials.');
-$login->setContent('IDENTITY_LABEL', 'Username or Email');
+$login->setContent('FORM_TITLE', 'Login');
+$login->setContent('FORM_LEAD', 'Accedi al portale MedCare con le tue credennziali da paziente o professionista');
+$login->setContent('IDENTITY_LABEL', 'Username o Email');
 $login->setContent('IDENTITY_VALUE', esc($identity));
 $login->setContent('PASSWORD_LABEL', 'Password');
-$login->setContent('SUBMIT_TEXT', 'Sign In Securely');
-$login->setContent('HELP_TEXT', 'Use your assigned account. Contact administration if you cannot access your profile.');
+$login->setContent('SUBMIT_TEXT', 'Accedi');
+$login->setContent('HELP_TEXT', "Contatta l'amministrazione se hai problemi ad accedere.");
 $login->setContent('HOME_URL', 'index.php');
-$login->setContent('HOME_TEXT', 'Return to Homepage');
+$login->setContent('HOME_TEXT', 'Torna alla home');
 $login->setContent('ALERT_CLASS', $errorMessage === '' ? 'alert is-hidden' : 'alert alert-error');
 $login->setContent('ALERT_MESSAGE', esc($errorMessage));
 
 $contentHtml = $login->get();
 
 $base = new Template(__DIR__ . '/../skins/frontend/base');
-$base->setContent('PAGE_TITLE', 'MedCare Portal - Sign In');
-$base->setContent('META_DESCRIPTION', 'Sign in to MedCare Portal to access role-specific healthcare services.');
+$base->setContent('PAGE_TITLE', 'MedCare Portal - Login');
+$base->setContent('META_DESCRIPTION', 'Accedi al portale MedCare');
 $base->setContent('BRAND_NAME', 'MedCare Portal');
-$base->setContent('NAV_WELCOME', 'Secure authentication area');
+$base->setContent('NAV_WELCOME', 'Area di accesso sicura');
 $base->setContent('PAGE_CONTENT', $contentHtml);
 $base->setContent('CURRENT_YEAR', date('Y'));
 

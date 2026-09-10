@@ -7,9 +7,13 @@
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
-CREATE DATABASE IF NOT EXISTS medcare_portal
+CREATE DATABASE IF NOT EXISTS medcare_portal_llm
   CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE medcare_portal;
+USE medcare_portal_llm;
+
+CREATE USER IF NOT EXISTS 'medcare_user'@'localhost' IDENTIFIED BY 'ChangeMeStrong123!';
+GRANT ALL PRIVILEGES ON `medcare_portal`.* TO 'medcare_user'@'localhost';
+FLUSH PRIVILEGES;
 
 -- ---------------------------------------------------------------------
 -- 1. users
